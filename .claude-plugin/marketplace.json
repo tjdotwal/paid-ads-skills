@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "paid-ads",
+  "owner": {
+    "name": "Trent Walker"
+  },
+  "plugins": [
+    {
+      "name": "keyword-planner",
+      "source": "./keyword-planner",
+      "description": "Google Ads Keyword Planner integration — generate keyword ideas, pull historical search volume, and forecast performance directly in Claude.",
+      "author": {
+        "name": "Trent Walker"
+      }
+    },
+    {
+      "name": "google-ads",
+      "source": "./google-ads",
+      "description": "Google Ads MCP server plus skills for search-term mining, negative-keyword work, campaign builds, and naming conventions. Reads and writes a live account via the Google Ads API.",
+      "author": {
+        "name": "Trent Walker"
+      }
+    },
+    {
+      "name": "meta-ads",
+      "source": "./meta-ads",
+      "description": "Meta Ads (Facebook/Instagram) MCP server plus skills for account auditing and creative performance analysis. Fetches real creative — including video transcripts and keyframes — not just metrics.",
+      "author": {
+        "name": "Trent Walker"
+      }
+    },
+    {
+      "name": "creative",
+      "source": "./creative",
+      "description": "Skills-only research and creative toolkit: market and competitor research, peer-reviewed mechanism research, a 52-template creative format library, ad concept strategy, and direct-response copywriting. Channel-agnostic.",
+      "author": {
+        "name": "Trent Walker"
+      }
+    }
+  ]
+}

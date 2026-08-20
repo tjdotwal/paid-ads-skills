@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "keyword-planner": {
+      "command": "bash",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/start-keyword-planner.sh"]
+    }
+  }
+}

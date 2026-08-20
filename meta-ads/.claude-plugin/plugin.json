@@ -1,0 +1,15 @@
+{
+  "name": "meta-ads",
+  "version": "1.0.0",
+  "description": "Meta Ads (Facebook/Instagram) MCP server wrapping Meta's official `meta ads` CLI, plus skills for account auditing and creative performance analysis. Fetches real creative including video transcripts and keyframes.",
+  "author": {
+    "name": "Trent Walker"
+  },
+  "keywords": [
+    "meta-ads",
+    "facebook-ads",
+    "instagram-ads",
+    "paid-social",
+    "creative-analysis"
+  ]
+}

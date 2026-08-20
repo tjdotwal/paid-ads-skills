@@ -1,0 +1,9 @@
+{
+  "name": "keyword-planner",
+  "version": "1.0.0",
+  "description": "Google Ads Keyword Planner integration — generate keyword ideas, pull historical search volume, and forecast performance directly in Claude.",
+  "author": {
+    "name": "Trent Walker"
+  },
+  "keywords": ["google-ads", "keyword-planner", "keyword-research", "ppc", "search-volume"]
+}

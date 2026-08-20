@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs / temp
+*.log
+*.tmp
+
+# Python (for hypelocal-meta-ads and any future Python-based plugins)
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local env files (never commit credentials)
+.env
+.env.local
+
+# Downloaded MCP binaries (fetched on first run by the start script)
+keyword-planner/bin/
