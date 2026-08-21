@@ -8,7 +8,7 @@
     {
       "name": "keyword-planner",
       "source": "./keyword-planner",
-      "description": "Google Ads Keyword Planner integration — generate keyword ideas, pull historical search volume, and forecast performance directly in Claude.",
+      "description": "Google Ads Keyword Planner integration \u2014 generate keyword ideas, pull historical search volume, and forecast performance directly in Claude.",
       "author": {
         "name": "Trent Walker"
       }
@@ -24,7 +24,7 @@
     {
       "name": "meta-ads",
       "source": "./meta-ads",
-      "description": "Meta Ads (Facebook/Instagram) MCP server plus skills for account auditing and creative performance analysis. Fetches real creative — including video transcripts and keyframes — not just metrics.",
+      "description": "Meta Ads (Facebook/Instagram) MCP server plus skills for account auditing and creative performance analysis. Fetches real creative \u2014 including video transcripts and keyframes \u2014 not just metrics.",
       "author": {
         "name": "Trent Walker"
       }
@@ -33,6 +33,14 @@
       "name": "creative",
       "source": "./creative",
       "description": "Skills-only research and creative toolkit: market and competitor research, peer-reviewed mechanism research, a 52-template creative format library, ad concept strategy, and direct-response copywriting. Channel-agnostic.",
+      "author": {
+        "name": "Trent Walker"
+      }
+    },
+    {
+      "name": "reporting",
+      "source": "./reporting",
+      "description": "Cross-channel budget pacing and performance review across Google Ads and Meta. Day-aware pacing tolerance, 3-month day-matched baselines, bucket thresholds, and conversion-volume reallocation logic. Skills-only; orchestrates the google-ads and meta-ads plugins.",
       "author": {
         "name": "Trent Walker"
       }

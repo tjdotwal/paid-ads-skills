@@ -31,3 +31,4 @@ keyword-planner/bin/
 
 # Local Notion enrichment config (holds a private workspace URL + data source ID)
 **/references/notion-source.md
+**/config/budget.md

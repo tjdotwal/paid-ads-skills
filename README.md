@@ -14,9 +14,10 @@ Add the marketplace, then install the plugins you need:
 /plugin install meta-ads@paid-ads
 /plugin install keyword-planner@paid-ads
 /plugin install creative@paid-ads
+/plugin install reporting@paid-ads
 ```
 
-`google-ads`, `meta-ads`, and `keyword-planner` need API credentials. `creative` needs none — it runs on the built-in web tools. See **[SETUP.md](./SETUP.md)** for credentials, `uv`, and the OAuth flow.
+`google-ads`, `meta-ads`, and `keyword-planner` need API credentials. `creative` needs none. `reporting` needs no credentials of its own but calls the two ad plugins, plus a local `config/budget.md`. See **[SETUP.md](./SETUP.md)** for credentials, `uv`, and the OAuth flow.
 
 ## Plugins
 
@@ -67,6 +68,15 @@ Skills only, no MCP server. The research and creative layer that runs before cop
 
 Commands: `/log-win`, `/pull-winners`, `/distill-swipe` — maintain an annotated swipe file of winning ads. `/pull-winners` reads both ad platforms over a date window and drafts diagnosed entries for approval.
 
+### `reporting`
+
+Skills only. Cross-channel pacing and performance review, orchestrating the two ad plugins. Needs `config/budget.md` for monthly intent — the one number no API can supply. Everything else is pulled live.
+
+| Skill | What it does |
+|---|---|
+| `budget-pacing-manager` | Is spend on schedule, and should budget move? Day-aware tolerance band, trailing-14-day reallocation logic, Google impression-share and Meta frequency supply diagnostics, budget-conserving recommendations |
+| `advertising-performance-manager` | Is that spend producing leads at the right cost? 3-month day-matched baselines, 🔴/🟢/🟡/🆕 buckets, and a symptom-to-cause table separating auction pressure from creative fatigue from broken tracking |
+
 ## How it fits together
 
 The skills are designed to chain. Research produces evidence, strategy picks formats, copy executes:
@@ -88,6 +98,15 @@ keyword-research ─→ google-ads-campaign-build ─→ mine-search-terms ─�
 
 `meta-creative-analysis` closes the loop back to `ad-creative-strategist` — the analysis ends with next-test theses the strategist picks up.
 
+The reporting pair runs on its own cadence over both channels:
+
+```
+budget-pacing-manager ──→ is spend on schedule, and where should it go?
+advertising-performance-manager ──→ did that spend produce leads at the right cost?
+```
+
+Run pacing first — moving budget toward a campaign that's quietly broken is worse than leaving it alone.
+
 ## Repo layout
 
 ```
@@ -98,7 +117,8 @@ paid-ads-skills/
 ├── google-ads/               MCP server (Python) + 4 skills
 ├── meta-ads/                 MCP server (Python) + 2 skills
 ├── keyword-planner/          MCP server (Go binary) + 1 skill
-└── creative/                 6 skills, no MCP server
+├── creative/                 6 skills, no MCP server
+└── reporting/                2 skills, no MCP server
 ```
 
 Each plugin has a `CLAUDE.md` defining its operating posture and guardrails, and a `README.md` covering its own setup.
