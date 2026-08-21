@@ -12,7 +12,7 @@
 *.log
 *.tmp
 
-# Python (for hypelocal-meta-ads and any future Python-based plugins)
+# Python (for the MCP servers and any future Python-based plugins)
 .venv/
 __pycache__/
 *.pyc

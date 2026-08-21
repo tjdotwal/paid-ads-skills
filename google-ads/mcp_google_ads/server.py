@@ -1536,8 +1536,8 @@ async def add_negative_keywords(
         level: CAMPAIGN or AD_GROUP.
         login_customer_id: Optional MCC override (10-digit numeric string). When
             omitted, uses GOOGLE_ADS_LOGIN_CUSTOMER_ID env. Required when the
-            account is under a manager other than the default, e.g. "1086145651"
-            (Harvard Media MCC).
+            account is under a manager other than the default, e.g. "1234567890"
+            (the manager account ID).
 
     Returns:
         Success message with the created criterion resource names, or an error.
@@ -1597,8 +1597,8 @@ async def add_keywords(
         keywords: [{"text": "...", "match_type": "PHRASE", "cpc_bid_micros": 1000000}, ...]
         status: ENABLED, PAUSED, or REMOVED.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651"
-            (Harvard Media).
+            Required for accounts under a non-default manager, e.g. "1234567890"
+            (the manager account ID).
 
     Returns:
         Success message with the created criterion resource names, or an error.
@@ -1649,8 +1649,8 @@ async def update_keyword_status(
         criterion_resource_name: The adGroupCriteria resource name.
         status: ENABLED, PAUSED, or REMOVED.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651"
-            (Harvard Media).
+            Required for accounts under a non-default manager, e.g. "1234567890"
+            (the manager account ID).
 
     Returns:
         Success or error message.
@@ -1688,7 +1688,7 @@ async def update_campaign_status(
         campaign_resource_name: The campaign resource name.
         status: ENABLED, PAUSED, or REMOVED.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success or error message.
@@ -1730,7 +1730,7 @@ async def create_campaign_budget(
         delivery_method: STANDARD or ACCELERATED.
         explicitly_shared: Whether the budget is shared across campaigns.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success message with the created campaignBudget resource name, or an error.
@@ -1777,7 +1777,7 @@ async def update_campaign_budget(
         amount_micros: New daily amount in micros, if changing.
         name: New name, if changing.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success or error message.
@@ -1824,7 +1824,7 @@ async def update_budget_amount(
         budget_resource_name: The campaignBudget resource name.
         amount_micros: New daily amount in micros.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success or error message.
@@ -1859,7 +1859,7 @@ async def create_campaign(
         status: ENABLED, PAUSED, or REMOVED.
         bidding_strategy: MANUAL_CPC, MAXIMIZE_CONVERSIONS, or MAXIMIZE_CONVERSION_VALUE.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success message with the created campaign resource name, or an error.
@@ -1922,7 +1922,7 @@ async def create_ad_group(
         status: ENABLED, PAUSED, or REMOVED.
         cpc_bid_micros: Optional default CPC bid in micros.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success message with the created ad group resource name, or an error.
@@ -1978,7 +1978,7 @@ async def create_responsive_search_ad(
         status: ENABLED, PAUSED, or REMOVED.
         path1/path2: Optional display-URL paths.
         login_customer_id: Optional MCC override (10-digit numeric string).
-            Required for accounts under a non-default manager, e.g. "1086145651".
+            Required for accounts under a non-default manager, e.g. "1234567890".
 
     Returns:
         Success message with the created adGroupAd resource name, or an error.
