@@ -20,9 +20,23 @@ If `references/notion-source.md` exists, the taxonomy has a live upstream in Not
 2. Reconcile against the table below. Rows not in it are new — use them, reason from the name and section, and tell the user they aren't documented locally yet.
 3. **Before writing a brief or a JSON prompt for a specific format, fetch that format's page** and use its JSON prompt template verbatim rather than reconstructing one.
 
-If the file is absent or the Notion connector isn't available, work from this file and `references/format-detail.md` and say nothing about it — they're complete enough to work from. This is enrichment, not a dependency.
+If the file is absent or the Notion connector isn't available, work from this file and `references/format-detail.md` — they're complete enough to work from. **But say so in the output** (see Source stamp below). The user needs to know when they're getting the local snapshot rather than the live library.
 
 Note the shape of the upstream: formats **1–42 carry only a JSON prompt** on their Notion page, no prose. Formats **43–52 carry full prose specs**, already mirrored into `format-detail.md`. So for the older formats, Notion adds the JSON template; for the newer ones, it adds the template and reference screenshots.
+
+## Source stamp (required on every output)
+
+Every set of format recommendations, every design brief, and every JSON prompt ends with a one-line stamp saying where the format content came from. No exceptions, and never omit it because it seems obvious.
+
+```
+Source: Notion live — 52 formats listed, pages fetched for 5, 21, 45
+Source: local files only — Notion not configured
+Source: local files only — Notion configured but fetch failed (<reason>)
+```
+
+If the stamp says `local files only`, you must also add one line telling the user what they're missing: the per-format JSON prompt templates, reference screenshots, and any format added to Notion since this repo was updated. Say it plainly so they can decide whether to open Notion themselves.
+
+Never imply Notion was consulted when it wasn't. If a fetch was attempted and failed, name the failure — a silent fallback is the one outcome that makes the output untrustworthy.
 
 ## How to use this library
 

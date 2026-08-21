@@ -161,7 +161,15 @@ Every JSON prompt uses exactly these keys. Do not rename, skip, or add keys unle
 
 **Check for `notion-source.md` before recommending formats.** When it exists and the Notion connector is available, fetch the page for each format you're about to brief and use its JSON prompt template rather than building one from the key architecture. That template is the difference between a usable image on the first generation and iterating three times. The older formats (1–42) have no prose spec upstream, only that template — so for those the fetch is *purely* about the prompt.
 
-When it's absent, work from the files above and don't mention it.
+When it's absent or the fetch fails, work from the files above — **and stamp the output** so the user knows. Every brief and every JSON prompt ends with:
+
+```
+Source: Notion live — pages fetched for <format numbers>
+Source: local files only — Notion not configured
+Source: local files only — Notion configured but fetch failed (<reason>)
+```
+
+On `local files only`, add one line naming what's missing: the per-format JSON prompt templates, reference screenshots, and any format newer than this repo. Never imply Notion was consulted when it wasn't — a silent fallback is what makes an output untrustworthy.
 
 **When to read which:**
 
