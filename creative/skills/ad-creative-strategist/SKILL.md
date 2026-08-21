@@ -157,12 +157,17 @@ Every JSON prompt uses exactly these keys. Do not rename, skip, or add keys unle
 | `../creative-format-library/SKILL.md` | All 52 templates by section, classification tips, the mimicry and production-value distinctions |
 | `../creative-format-library/references/format-detail.md` | Full specs for 43–52 — structure, rules, substantiation gates, complete video script beat sheets, remix logic |
 | `../creative-format-library/references/json-prompt-spec.md` | JSON prompt key architecture, two-stage brand-DNA workflow, worked example |
+| `../creative-format-library/references/notion-source.md` | **If present**, a live Notion upstream with a per-format JSON prompt template and reference screenshots |
+
+**Check for `notion-source.md` before recommending formats.** When it exists and the Notion connector is available, fetch the page for each format you're about to brief and use its JSON prompt template rather than building one from the key architecture. That template is the difference between a usable image on the first generation and iterating three times. The older formats (1–42) have no prose spec upstream, only that template — so for those the fetch is *purely* about the prompt.
+
+When it's absent, work from the files above and don't mention it.
 
 **When to read which:**
 
 - **Recommending or classifying formats 1–42** — the inline list below is sufficient. It carries strategic notes (funnel stage, when to reach for it) the taxonomy doesn't.
 - **Any of 43–52 in play** — read `format-detail.md` for that format before writing the brief. The inline entries for these are summaries of documents that run 40–90 lines each; for 48, 49, and 50 the beat sheet *is* the deliverable and you cannot reconstruct it from one line.
-- **Writing a JSON prompt** — read `json-prompt-spec.md`. Never improvise the key structure from memory.
+- **Writing a JSON prompt** — if `notion-source.md` exists, fetch that format's page and use its template. Otherwise read `json-prompt-spec.md` for the key architecture and build one. Never improvise the key structure from memory.
 - **Substantiation-gated formats (30, 45, 46, 52)** — read the gate in `format-detail.md` before proposing them. These borrow credibility from research or anatomy, so a version that can't clear its gate isn't a creative shortcut, it's a false claim.
 
 The inline list below and the taxonomy cover the same 52 templates. If they ever disagree on which formats exist, `creative-format-library` wins — it's the source of truth and this list is a strategic-notes layer over it.

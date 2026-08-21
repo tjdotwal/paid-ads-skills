@@ -10,7 +10,19 @@ A taxonomy for classifying, generating, and analyzing ad creative. **52 template
 
 Template numbers are the shared vocabulary — they are stable and never reused. Numbers are assigned in the order formats were added, so sections are not numerically contiguous (section E holds 26–30 and 43, 46–49, 52). Sort by section, not by number.
 
-Formats carrying more than a line of methodology have full specs in `references/format-detail.md` — that covers 43–52, the video script frameworks, and the substantiation rules on the claim-heavy formats. `references/json-prompt-spec.md` holds the JSON prompt architecture for image generation.
+Formats carrying more than a line of methodology have full specs in `references/format-detail.md` — that covers 43–52, the video script frameworks, and the substantiation rules on the claim-heavy formats. `references/json-prompt-spec.md` holds the JSON prompt architecture for image generation. `references/notion-source.example.md` explains the optional live-Notion enrichment.
+
+## Live source check (do this first)
+
+If `references/notion-source.md` exists, the taxonomy has a live upstream in Notion that carries two things this repo doesn't: **a JSON prompt template per format**, and any format added since the repo was last updated. Read that file for the `data_source_id`, then:
+
+1. Query the data source for `Name`, `Section`, `Aspect Ratio`, `Template Type`, `url`. That's the authoritative list of which formats exist right now.
+2. Reconcile against the table below. Rows not in it are new — use them, reason from the name and section, and tell the user they aren't documented locally yet.
+3. **Before writing a brief or a JSON prompt for a specific format, fetch that format's page** and use its JSON prompt template verbatim rather than reconstructing one.
+
+If the file is absent or the Notion connector isn't available, work from this file and `references/format-detail.md` and say nothing about it — they're complete enough to work from. This is enrichment, not a dependency.
+
+Note the shape of the upstream: formats **1–42 carry only a JSON prompt** on their Notion page, no prose. Formats **43–52 carry full prose specs**, already mirrored into `format-detail.md`. So for the older formats, Notion adds the JSON template; for the newer ones, it adds the template and reference screenshots.
 
 ## How to use this library
 

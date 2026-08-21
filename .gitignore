@@ -28,3 +28,6 @@ __pycache__/
 
 # Downloaded MCP binaries (fetched on first run by the start script)
 keyword-planner/bin/
+
+# Local Notion enrichment config (holds a private workspace URL + data source ID)
+**/references/notion-source.md
