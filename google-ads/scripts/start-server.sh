@@ -1,15 +1,30 @@
 #!/bin/bash
-# Load credentials from ~/.env and start the Google Ads MCP server
-# from the patched fork at github.com/tjdotwal/mcp-google-ads, pinned
-# to v2.1.0 (adds multi-MCC-aware WRITE tools — negatives, keywords,
-# status, budgets, campaigns — each accepting a per-call login_customer_id).
+# Load credentials from ~/.env and start the Google Ads MCP server.
+#
+# Required env vars (set in ~/.env):
+#   GOOGLE_ADS_DEVELOPER_TOKEN   Developer token; needs Basic access for production accounts
+#   GOOGLE_ADS_CLIENT_ID         OAuth 2.0 client ID (Desktop app type)
+#   GOOGLE_ADS_CLIENT_SECRET     OAuth 2.0 client secret
+#   GOOGLE_ADS_CREDENTIALS_PATH  Where the OAuth token file is read/written
+# Optional:
+#   GOOGLE_ADS_AUTH_TYPE         "oauth" (default) or "service_account"
+#   GOOGLE_ADS_LOGIN_CUSTOMER_ID Manager account ID, only if the target sits under one
+
 if [ -f "$HOME/.env" ]; then
   export $(cat "$HOME/.env" | grep -v '^#' | grep '=' | xargs)
 fi
 
-# The fork declares `mcp[cli]>=1.3.0` with no upper bound, so uvx resolves to
-# mcp 2.0.0, which dropped the vendored `mcp.server.fastmcp` module the server
-# imports. Hold mcp on the 1.x line until the fork migrates off it.
-exec uvx --from "git+https://github.com/tjdotwal/mcp-google-ads@v2.1.0" \
-  --with "mcp[cli]<2" \
-  mcp-google-ads
+# Hard fail early on missing creds — better than a cryptic MCP error later.
+for var in GOOGLE_ADS_DEVELOPER_TOKEN GOOGLE_ADS_CREDENTIALS_PATH; do
+  if [ -z "${!var}" ]; then
+    echo "ERROR: $var is not set. Add it to ~/.env." >&2
+    exit 3
+  fi
+done
+
+# On first run with no cached token, the server opens a browser for OAuth
+# consent. That needs a terminal, so complete it once by running this script
+# directly before letting Claude Code launch the plugin. See SETUP.md Step 4.
+
+# `uv run` installs deps into an isolated env on first launch, then reuses it.
+exec uv run --directory "${CLAUDE_PLUGIN_ROOT}" python -m mcp_google_ads

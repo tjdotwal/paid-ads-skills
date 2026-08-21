@@ -42,11 +42,11 @@ Worth knowing, because it explains the commands further down:
 
 | Plugin | Server | Where it comes from |
 |---|---|---|
-| `google-ads` | `mcp-google-ads` | Fetched by `uvx` from [`tjdotwal/mcp-google-ads`](https://github.com/tjdotwal/mcp-google-ads), pinned to `v2.1.0`. A public fork of the upstream project that adds the write tools — negatives, keywords, budgets, campaign status — each accepting a per-call `login_customer_id`. `mcp[cli]` is held below 2.0 because the server imports the vendored `mcp.server.fastmcp` module that 2.0 dropped. |
+| `google-ads` | `mcp_google_ads` | In this repo, under `google-ads/`. Vendored from [`cohnen/mcp-google-ads`](https://github.com/cohnen/mcp-google-ads) (MIT) with the write tools added — negatives, keywords, budgets, campaign status — each accepting a per-call `login_customer_id`. `mcp[cli]` is held below 2.0 because the server imports the vendored `mcp.server.fastmcp` module that 2.0 dropped. See `google-ads/NOTICE`. |
 | `meta-ads` | `mcp_meta_ads` | In this repo, under `meta-ads/`. A FastMCP server that wraps Meta's official `meta` CLI. |
 | `keyword-planner` | `kwp-mcp-go` | Downloaded on first run from [`ncosentino/google-keyword-planner-mcp`](https://github.com/ncosentino/google-keyword-planner-mcp) releases, matched to your OS and architecture, then cached in `keyword-planner/bin/`. |
 
-Nothing is vendored as a prebuilt binary in the repo — the Go binary is fetched at runtime and gitignored.
+Both Python servers live in this repo, so `git clone` gets you the actual source. Only the Keyword Planner binary is fetched at runtime, and it's gitignored rather than committed.
 
 ---
 
@@ -190,8 +190,7 @@ On first launch, if there's no valid token at that path, the server builds an OA
 > **Do this once from a terminal, not from Claude Code.** The flow needs to open a browser and bind a local port, which is unreliable from a server subprocess that has no terminal attached. Run it manually first so the token file exists before Claude Code ever launches the plugin:
 >
 > ```bash
-> set -a; source ~/.env; set +a
-> uvx --from "git+https://github.com/tjdotwal/mcp-google-ads@v2.1.0" --with "mcp[cli]<2" mcp-google-ads
+> bash google-ads/scripts/start-server.sh
 > ```
 >
 > Complete the browser consent, confirm the token file was written, then Ctrl+C. After that the plugin starts clean.

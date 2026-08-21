@@ -5,7 +5,9 @@ A Claude Code plugin for managing Google Ads across a brand's account. Connects 
 ## Components
 
 ### MCP Connector — Google Ads
-Connects to the Google Ads API via `mcp-google-ads`. Pointed at your account, or at a manager account for access to everything under it. Exposes GAQL query execution, campaign performance data, and account mutations (adding negative keywords, adjusting budgets, etc.).
+A FastMCP server in this plugin (`mcp_google_ads/`) that calls the Google Ads REST API directly. Pointed at your account, or at a manager account for access to everything under it. Vendored from [`cohnen/mcp-google-ads`](https://github.com/cohnen/mcp-google-ads) under MIT with the write tools added — see [NOTICE](./NOTICE) for attribution and the list of local changes.
+
+22 tools: GAQL execution (`run_gaql`, `execute_gaql_query`), performance reads (campaign, ad, keyword, asset), and mutations (negative keywords, keywords, keyword status, budgets, campaign status, campaign/ad group/RSA creation). Exposes GAQL query execution, campaign performance data, and account mutations (adding negative keywords, adjusting budgets, etc.).
 
 ### Skills
 

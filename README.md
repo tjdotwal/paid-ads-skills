@@ -22,7 +22,7 @@ Add the marketplace, then install the plugins you need:
 
 ### `google-ads`
 
-MCP server over the Google Ads API — GAQL queries, campaign and keyword performance, and mutations (negatives, keywords, budgets, campaign status).
+MCP server over the Google Ads API, in-repo under `google-ads/mcp_google_ads/` — GAQL queries, campaign and keyword performance, and mutations (negatives, keywords, budgets, campaign status). 22 tools.
 
 | Skill | What it does |
 |---|---|
@@ -46,7 +46,7 @@ The creative fetch tools are the useful part: `ad_image_get` returns full-resolu
 
 ### `keyword-planner`
 
-MCP server over the Google Ads Keyword Planner API: keyword ideas, historical search volume, and forecasts. Uses the same credentials as `google-ads`.
+MCP server over the Google Ads Keyword Planner API: keyword ideas, historical search volume, and forecasts. Shares the developer token and OAuth client with `google-ads`, but authenticates with a refresh token rather than a token file — the two are separate implementations. Requires an account with billing configured.
 
 | Skill | What it does |
 |---|---|
@@ -95,7 +95,7 @@ paid-ads-skills/
 ├── .claude-plugin/
 │   └── marketplace.json      Marketplace manifest
 ├── SETUP.md                  Credentials, uv, OAuth, smoke tests
-├── google-ads/               MCP server + 4 skills
+├── google-ads/               MCP server (Python) + 4 skills
 ├── meta-ads/                 MCP server (Python) + 2 skills
 ├── keyword-planner/          MCP server (Go binary) + 1 skill
 └── creative/                 6 skills, no MCP server
@@ -113,7 +113,8 @@ Bump the version in the plugin's `.claude-plugin/plugin.json` when a change is w
 
 MIT — see [LICENSE](./LICENSE).
 
-Two components are third-party and carry their own MIT licenses:
+Three components are third-party and carry their own MIT licenses:
 
 - **`creative/skills/no-ai-slop`** — by [Peter Yang](https://github.com/petergyang), vendored with its license at `creative/skills/no-ai-slop/LICENSE`.
+- **`google-ads/mcp_google_ads/server.py`** — vendored from [mcp-google-ads](https://github.com/cohnen/mcp-google-ads) by Ernesto Cohnen / ixigo, with the write tools added. Attribution, license, and local changes in `google-ads/NOTICE`.
 - **The Keyword Planner MCP binary** — [google-keyword-planner-mcp](https://github.com/ncosentino/google-keyword-planner-mcp) by Nick Cosentino. Not vendored; `keyword-planner/scripts/start-keyword-planner.sh` downloads the release binary for your platform on first run.

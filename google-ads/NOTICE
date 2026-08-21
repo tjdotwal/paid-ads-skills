@@ -1,0 +1,49 @@
+# NOTICE — third-party code in this plugin
+
+`mcp_google_ads/server.py` is vendored from **mcp-google-ads**:
+
+  https://github.com/cohnen/mcp-google-ads
+  Copyright (c) 2025 Ernesto Cohnen - ixigo
+  Licensed under the MIT License (full text below)
+
+It arrived here by way of https://github.com/tjdotwal/mcp-google-ads, a fork
+that added the write tools — negative keywords, keywords, keyword status,
+budget amounts, campaign status, and campaign creation — each accepting a
+per-call `login_customer_id` so a single server can address accounts under
+different manager accounts.
+
+## Local changes from upstream
+
+- Packaged as `mcp_google_ads/` (upstream ships a single flat
+  `google_ads_server.py` module) so it runs via `python -m mcp_google_ads`.
+- `mcp[cli]` pinned below 2.0. The server imports `mcp.server.fastmcp`, the
+  vendored FastMCP module that mcp 2.0 removed.
+- Dependencies trimmed to what the module actually imports. Upstream declares
+  `google-api-python-client` and `google-auth-httplib2`; neither is imported —
+  the server calls the REST API through `requests`.
+
+Behaviour is otherwise unmodified.
+
+---
+
+MIT License
+
+Copyright (c) 2025 Ernesto Cohnen - ixigo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
