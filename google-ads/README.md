@@ -42,27 +42,23 @@ This server does **not** read a refresh token from the environment — that's th
 
 ### Installing the MCP Server
 
-The plugin uses `mcp-google-ads` via `uvx`. Install `uv` if you don't have it:
+The server ships with the plugin. All it needs is `uv`, which builds the virtualenv on first launch:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Then verify:
+### First-Run OAuth
+
+With no valid token at `GOOGLE_ADS_CREDENTIALS_PATH`, the server builds an OAuth client from `GOOGLE_ADS_CLIENT_ID` / `GOOGLE_ADS_CLIENT_SECRET`, runs Google's installed-app flow, and saves the result.
+
+Do this once from a terminal, not from Claude Code — the flow opens a browser and binds a local port, which is unreliable from a subprocess with no terminal attached:
 
 ```bash
-uvx mcp-google-ads --help
+bash google-ads/scripts/start-server.sh
 ```
 
-### Generating a Refresh Token
-
-If you don't have a refresh token yet, run the OAuth flow:
-
-```bash
-uvx mcp-google-ads auth
-```
-
-Follow the prompts to authorize access to your Google Ads MCC account.
+Complete the browser consent, confirm the token file was written, then Ctrl+C. After that the plugin starts clean. Sign in as the Google account that actually has access to the ad account — another account will authorize fine and then fail every API call with `USER_PERMISSION_DENIED`.
 
 ## Usage
 
