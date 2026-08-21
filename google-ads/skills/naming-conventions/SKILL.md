@@ -19,7 +19,7 @@ The taxonomy below is a convention, not a platform rule. It is the structure thi
 
 ## Account Targeting
 
-`list_accounts` returns **numeric customer IDs only — no account names**, so it can't be used on its own to pick an account by name. Resolve the ID once and keep it in your environment as `GOOGLE_ADS_CUSTOMER_ID`.
+`list_accounts` returns **numeric customer IDs only — no account names**, so it can't be used on its own to pick an account by name. Every tool takes `customer_id` per call, so resolve the ID once and keep it somewhere you can reach — `GOOGLE_ADS_CUSTOMER_ID` in `~/.env` is the convention used here.
 
 **If the account sits under a manager account (MCC):**
 

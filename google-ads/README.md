@@ -29,11 +29,14 @@ Set these in your system environment or Claude's MCP configuration before using 
 
 | Variable | Description |
 |----------|-------------|
-| `GOOGLE_ADS_DEVELOPER_TOKEN` | Your Google Ads developer token |
-| `GOOGLE_ADS_CLIENT_ID` | OAuth 2.0 client ID from Google Cloud Console |
+| `GOOGLE_ADS_DEVELOPER_TOKEN` | Google Ads developer token. Needs Basic access to query production accounts |
+| `GOOGLE_ADS_CLIENT_ID` | OAuth 2.0 client ID from Google Cloud Console (Desktop app type) |
 | `GOOGLE_ADS_CLIENT_SECRET` | OAuth 2.0 client secret |
-| `GOOGLE_ADS_REFRESH_TOKEN` | OAuth refresh token (generated via Google OAuth flow) |
-| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | Your MCC customer ID (format: XXX-XXX-XXXX, digits only) |
+| `GOOGLE_ADS_CREDENTIALS_PATH` | Path where the server reads and writes its OAuth token file. Required even before the file exists |
+| `GOOGLE_ADS_AUTH_TYPE` | `oauth` (default) or `service_account`. Optional |
+| `GOOGLE_ADS_LOGIN_CUSTOMER_ID` | Manager account ID, digits only. Only set this if the target account sits under a manager |
+
+This server does **not** read a refresh token from the environment — that's the `keyword-planner` plugin's auth model. This one runs the OAuth installed-app flow itself on first launch and caches the result at `GOOGLE_ADS_CREDENTIALS_PATH`. Run it once from a terminal so the browser consent can complete before Claude Code launches it; see Step 4 in [SETUP.md](../SETUP.md).
 
 ### Installing the MCP Server
 
