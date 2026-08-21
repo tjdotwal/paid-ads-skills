@@ -6,14 +6,12 @@
   Copyright (c) 2025 Ernesto Cohnen - ixigo
   Licensed under the MIT License (full text below)
 
-It arrived here by way of https://github.com/tjdotwal/mcp-google-ads, a fork
-that added the write tools — negative keywords, keywords, keyword status,
-budget amounts, campaign status, and campaign creation — each accepting a
-per-call `login_customer_id` so a single server can address accounts under
-different manager accounts.
-
 ## Local changes from upstream
 
+- Write tools added — negative keywords, keywords, keyword status, budget
+  amounts, campaign status, and campaign creation. Each accepts a per-call
+  `login_customer_id`, so a single server can address accounts under
+  different manager accounts.
 - Packaged as `mcp_google_ads/` (upstream ships a single flat
   `google_ads_server.py` module) so it runs via `python -m mcp_google_ads`.
 - `mcp[cli]` pinned below 2.0. The server imports `mcp.server.fastmcp`, the
@@ -21,8 +19,10 @@ different manager accounts.
 - Dependencies trimmed to what the module actually imports. Upstream declares
   `google-api-python-client` and `google-auth-httplib2`; neither is imported —
   the server calls the REST API through `requests`.
+- Agency-specific examples in the tool docstrings replaced with generic
+  placeholders.
 
-Behaviour is otherwise unmodified.
+Upstream's own tools are otherwise unmodified.
 
 ---
 
