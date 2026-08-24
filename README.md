@@ -129,6 +129,29 @@ Skills are markdown. Open the `SKILL.md`, edit, and restart Claude Code (or star
 
 Bump the version in the plugin's `.claude-plugin/plugin.json` when a change is worth tracking.
 
+## Testing
+
+Two checks, split by whether they need credentials.
+
+```bash
+python3 scripts/smoke-test.py     # no credentials, runs in CI on every push
+python3 scripts/live-check.py     # needs ~/.env, run before releasing
+```
+
+`smoke-test.py` validates the manifests against what's on disk, checks every skill's
+frontmatter, parses every shell script, compiles every server, and starts each MCP server with
+dummy credentials to confirm it still exposes its tools. It also fails if a `bin/` directory
+reappears — that silently blocks claude.ai marketplace sync — or if anything resembling a
+credential gets committed.
+
+`live-check.py` makes read-only calls against the real Google and Meta APIs. Nothing is
+created, updated, or deleted.
+
+**Run the live check whenever you change how a tool builds a request.** The smoke test cannot
+catch a stale API payload: a tool can start, list itself, and still fail or return nothing on
+every call. Both bugs fixed in keyword-planner 2.0.0 were that shape, and neither would have
+shown up in CI.
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).

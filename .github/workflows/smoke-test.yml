@@ -1,0 +1,29 @@
+name: smoke test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      # No credentials are configured for this job on purpose. The servers boot
+      # with dummy values and are only asked to list their tools, so nothing
+      # here can reach a real ad account. The credentialed half lives in
+      # scripts/live-check.py and is run by hand before release.
+      - name: Run smoke test
+        run: python3 scripts/smoke-test.py
