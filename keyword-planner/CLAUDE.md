@@ -28,6 +28,19 @@ Three situations trigger keyword research:
 | `get_historical_metrics` | Validating a known list of keywords — get volume, competition, and bid ranges |
 | `get_keyword_forecast` | Projecting campaign performance — estimate clicks, impressions, cost at a given bid |
 
+### Always scope the call
+
+**Pass `geo_targets` on every call.** Omit it and you get worldwide volume, which for a local
+advertiser is wrong by an order of magnitude — "managed it services" reads 49,500/mo worldwide
+and 1,600/mo in Canada. Sizing a campaign off the worldwide number will badly overstate
+expected traffic. Use the real market: `["CA"]`, `["US"]`, or a specific geo ID.
+
+**Pass `customer_id` and `login_customer_id` when working a specific account.** Both fall back
+to `~/.env`, which points at whichever account was configured last — not necessarily the one
+in front of you.
+
+Costs come back in the target account's currency. Don't stamp a dollar sign on a CAD account.
+
 ## Integration with Google Ads Plugin
 
 This plugin works alongside the `google-ads` plugin. The workflow is:

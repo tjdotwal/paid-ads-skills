@@ -33,8 +33,32 @@ The Keyword Planner API requires an account with billing configured. You don't n
 
 Requires at least Basic access on your developer token (not test mode). If you're already running the Google Ads plugin, you should already have this.
 
+### Scoping every call
+
+All three tools take optional `customer_id` and `login_customer_id`, so a single call can
+target any account under any manager account without touching `~/.env`. Unset, they fall back
+to the env defaults above.
+
+They also take `geo_targets` (`["CA"]`, `["2124"]`, or a full resource name) and `language`
+(`"en"`, `"1000"`, or a full resource name). **Omitting `geo_targets` returns worldwide
+volume**, which for a local advertiser overstates reality by an order of magnitude — the same
+term reads 49,500/mo worldwide and 1,600/mo in Canada. Pass the market you actually advertise in.
+
 ## How it works
 
-On first run, the start script auto-detects your OS and architecture, downloads the correct binary from GitHub, and launches it. Subsequent runs use the cached binary.
+`scripts/start-keyword-planner.sh` loads `~/.env` and launches a Python MCP server through
+`uv run`, which builds an isolated environment on first launch and reuses it afterwards. Same
+pattern as the `google-ads` and `meta-ads` plugins. Requires [uv](https://docs.astral.sh/uv/).
 
-The binary is [google-keyword-planner-mcp](https://github.com/ncosentino/google-keyword-planner-mcp) by Nick Cosentino (MIT licensed). Source code reviewed and approved.
+The server calls the Google Ads API v23 directly. Through 1.0.0 it downloaded and wrapped a
+prebuilt Go binary ([google-keyword-planner-mcp](https://github.com/ncosentino/google-keyword-planner-mcp)
+by Nick Cosentino, MIT licensed). That was dropped in 2.0.0 because two of its three tools were
+broken against v23:
+
+- `get_keyword_forecast` returned HTTP 400. It posted `campaignForecastSpec`, which v23 does
+  not define — the request field is `campaign`.
+- `get_historical_metrics` silently returned zero results for every input, discarding a
+  response the API had actually populated.
+
+Dropping it also means nothing is downloaded at startup and no executable is written into the
+plugin directory, which may be read-only depending on install layout.
