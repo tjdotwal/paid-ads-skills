@@ -44,9 +44,11 @@ Worth knowing, because it explains the commands further down:
 |---|---|---|
 | `google-ads` | `mcp_google_ads` | In this repo, under `google-ads/`. Vendored from [`cohnen/mcp-google-ads`](https://github.com/cohnen/mcp-google-ads) (MIT) with the write tools added — negatives, keywords, budgets, campaign status — each accepting a per-call `login_customer_id`. `mcp[cli]` is held below 2.0 because the server imports the vendored `mcp.server.fastmcp` module that 2.0 dropped. See `google-ads/NOTICE`. |
 | `meta-ads` | `mcp_meta_ads` | In this repo, under `meta-ads/`. A FastMCP server that wraps Meta's official `meta` CLI. |
-| `keyword-planner` | `kwp-mcp-go` | Downloaded on first run from [`ncosentino/google-keyword-planner-mcp`](https://github.com/ncosentino/google-keyword-planner-mcp) releases, matched to your OS and architecture, then cached in `keyword-planner/bin/`. |
+| `keyword-planner` | `mcp_keyword_planner` | In this repo, under `keyword-planner/`. A FastMCP server calling the Google Ads API v23 directly. |
 
-Both Python servers live in this repo, so `git clone` gets you the actual source. Only the Keyword Planner binary is fetched at runtime, and it's gitignored rather than committed.
+All three servers live in this repo, so `git clone` gets you the actual source. Nothing is downloaded at runtime.
+
+Through keyword-planner 1.0.0 this plugin fetched a prebuilt Go binary instead. It was dropped in 2.0.0 because two of its three tools were broken against v23: `get_keyword_forecast` posted a request field the API does not define, and `get_historical_metrics` silently returned zero results for every input.
 
 ---
 

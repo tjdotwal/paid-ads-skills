@@ -116,7 +116,7 @@ paid-ads-skills/
 ├── SETUP.md                  Credentials, uv, OAuth, smoke tests
 ├── google-ads/               MCP server (Python) + 4 skills
 ├── meta-ads/                 MCP server (Python) + 2 skills
-├── keyword-planner/          MCP server (Go binary) + 1 skill
+├── keyword-planner/          MCP server (Python) + 1 skill
 ├── creative/                 6 skills, no MCP server
 └── reporting/                2 skills, no MCP server
 ```
@@ -133,8 +133,10 @@ Bump the version in the plugin's `.claude-plugin/plugin.json` when a change is w
 
 MIT — see [LICENSE](./LICENSE).
 
-Three components are third-party and carry their own MIT licenses:
+Two components are third-party and carry their own MIT licenses:
 
 - **`creative/skills/no-ai-slop`** — by [Peter Yang](https://github.com/petergyang), vendored with its license at `creative/skills/no-ai-slop/LICENSE`.
 - **`google-ads/mcp_google_ads/server.py`** — vendored from [mcp-google-ads](https://github.com/cohnen/mcp-google-ads) by Ernesto Cohnen / ixigo, with the write tools added. Attribution, license, and local changes in `google-ads/NOTICE`.
-- **The Keyword Planner MCP binary** — [google-keyword-planner-mcp](https://github.com/ncosentino/google-keyword-planner-mcp) by Nick Cosentino. Not vendored; `keyword-planner/scripts/start-keyword-planner.sh` downloads the release binary for your platform on first run.
+
+`keyword-planner` previously downloaded a third-party Go binary
+([google-keyword-planner-mcp](https://github.com/ncosentino/google-keyword-planner-mcp) by Nick Cosentino). That was dropped in keyword-planner 2.0.0 — two of its three tools were broken against Google Ads API v23. The plugin now ships its own Python server and downloads nothing at runtime.
