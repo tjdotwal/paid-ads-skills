@@ -44,6 +44,14 @@
       "author": {
         "name": "Trent Walker"
       }
+    },
+    {
+      "name": "explainer-ads",
+      "source": "./explainer-ads",
+      "description": "Animated explainer video ad pipeline: turns a direct-response script into a finished narrated, captioned vertical MP4. Beat-driven scenes, locked animation style, ElevenLabs narration, ffmpeg assembly. No spokespeople or UGC.",
+      "author": {
+        "name": "Trent Walker"
+      }
     }
   ]
 }

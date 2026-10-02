@@ -77,67 +77,55 @@ When in doubt, default to campaign level and flag it.
 
 ### 6. Build the Negation Output
 
-Group negate candidates by campaign, sorted by spend descending within each campaign.
+**The CSV carries the rows. Chat carries the decisions.** See `search-term-methodology` → "Output Format" and the plugin `CLAUDE.md` → "Output Discipline".
 
-Present in chat using this table format — always include all four metrics:
+Group negate candidates by campaign, sorted by spend descending. In chat, each campaign is one line: name and count. Full term-by-term detail goes to the CSV — hand it over in chat only if asked.
 
-| Search Term | Clicks | Impr. | Spend | CPC | Match Type | Decision | Reasoning |
-|-------------|--------|-------|-------|-----|------------|----------|-----------|
+For phrase match negates, name the **signal word**, not the full term.
 
-Format spend and CPC as dollar amounts (divide cost_micros by 1,000,000, round to 2 decimal places).
+Test candidates get one line each — the term, the two readings, the question:
 
-For phrase match negates, show the **signal word** being negated, not the full term, and note the match type as "Phrase Match – [word]".
-
-For Test Candidates, show them in a separate section and include the question for the analyst:
-
-> "This term could indicate [use case A] or [use case B]. Has the brand confirmed whether [use case] is in scope? Recommend running it and reviewing in 30 days if not confirmed."
+> `sports admin software` — league admin or IT admin? Brand confirmed IT is out of scope? Recommend running 30 more days if not.
 
 ### 7. Build the Keyword Opportunity Output
 
-Present in chat alongside the negation output:
+One line per opportunity, alongside the negation summary:
 
-| Search Term | Clicks | Impr. | Spend | Suggested Action | Destination Ad Group | Match Type | Reasoning |
-|-------------|--------|-------|-------|-----------------|---------------------|------------|-----------|
+> `youth registration platform` — 2 conv / 14 clicks → `registration-software` exact. Stage 1.
 
-Include opportunities where:
-- The term has a conversion and is clearly on-theme
-- The term has 5+ impressions and is on-theme, even without clicks — worth monitoring
-- The term represents a distinct intent variant worth capturing separately
+Include opportunities where the term converted and is on-theme, or has 5+ impressions and is on-theme, or represents a distinct intent variant worth capturing. Skip close variants of existing keywords.
 
-Skip close variants of existing keywords — modern match types handle them.
-
-For each opportunity, note whether it should be added to an existing ad group (Stage 1) or whether it warrants its own ad group (Stage 2 — flag when intent is distinct enough to need dedicated copy, or when impression share is likely starved in the current ad group).
+Mark Stage 2 (own ad group) only when intent is distinct enough to need dedicated copy, or impression share is starved in the current ad group. One clause of why, no more.
 
 ### 8. Present the Summary and CSV
 
-After evaluation is complete, present a summary in chat:
-
 ```
-Search Term Review — [Client Name] — [Date Range]
+Search Terms — [Account] — [Date Range]
+X negates across Y campaigns · $Z/30d recovered · N held for you
 
-NEGATE CANDIDATES: X terms across Y campaigns
-[Negation table]
+Ready to push
+  [campaign] — X terms
+  [campaign] — X terms
 
-TEST CANDIDATES: X terms (awaiting your input)
-[Test candidate table with analyst questions]
+Held — your call
+  • [term/signal] — [the fact that would make you overrule] ([the stake])
 
-KEYWORD OPPORTUNITIES: X terms identified
-[Opportunity table]
+Test candidates (N)
+  • [term] — [reading A] or [reading B]? [question]
 
-[Keyword health observations if 1-impression cluster analysis was triggered]
+Opportunities (N)
+  • [term] — [metric] → [ad group] [match type]. Stage [1|2].
 ```
 
-Then save a bulk-upload-ready CSV as `search-term-negatives-YYYY-MM-DD.csv` to the outputs folder. Include only rows where Decision = `Negate` (not Test Candidates — those need analyst sign-off first).
+Save a bulk-upload-ready CSV as `search-term-negatives-YYYY-MM-DD.csv` to the outputs folder. Include only rows where Decision = `Negate` — test candidates need analyst sign-off first.
 
 **Required CSV columns (in this order):**
 
 | Campaign | Ad Group | Keyword | Search Term | Match Type | Cost | Clicks | Impressions | CPC | CTR | Conversions | Decision | Reasoning |
 
-Format cost/CPC as dollar amounts. Format CTR as a percentage. Round CPC to 2 decimal places.
+Format cost/CPC as dollar amounts, CTR as a percentage, CPC to 2 decimals.
 
-Provide the file link and say:
-
-> "CSV is ready with X confirmed negates. [Link] — Would you like me to push these directly? I'll go campaign by campaign and wait for your confirmation on each batch."
+Then one line: the file link, and "Push these? I'll go campaign by campaign."
 
 ### 9. Push Negatives (Optional — Requires Explicit Approval Per Campaign)
 
@@ -148,7 +136,7 @@ If the user says yes:
 3. Say: "Ready to add X negatives to [Campaign Name]. Confirm?"
 4. Wait for explicit confirmation before executing
 5. Execute using the MCP tool
-6. Confirm: "Added X negatives to [Campaign Name]. Moving to next batch..."
+6. Confirm in one line: "Added X to [Campaign Name]."
 7. Repeat for each campaign
 
 **Never add negatives across multiple campaigns in a single step.** Always batch by campaign and confirm each one individually.

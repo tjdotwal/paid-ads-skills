@@ -1,10 +1,14 @@
 [project]
 name = "paid-ads-mcp-meta-ads"
-version = "0.5.0"
-description = "MCP server that wraps Meta's official `meta ads` CLI so Claude can read and manage a Meta ad account."
+version = "0.6.0"
+description = "MCP server that wraps Meta's official `meta ads` CLI, plus direct Marketing API calls for full campaign builds, so Claude can read and manage a Meta ad account."
 requires-python = ">=3.12"
 dependencies = [
-  "mcp[cli]>=1.2.0",
+  # <2: mcp 2.x renamed FastMCP → MCPServer and changed APIs. Pin until the
+  # server is migrated.
+  "mcp[cli]>=1.2.0,<2",
+  # Reads the campaign.xlsx workbook that drives `campaign_build`.
+  "openpyxl>=3.1",
   # Local video transcription. Skipped on Intel Macs: faster-whisper requires
   # onnxruntime (Silero VAD), which ships no macOS x86_64 wheel — as a hard
   # dep it would fail `uv sync` and take the whole MCP server down with it.

@@ -15,9 +15,10 @@ Add the marketplace, then install the plugins you need:
 /plugin install keyword-planner@paid-ads
 /plugin install creative@paid-ads
 /plugin install reporting@paid-ads
+/plugin install explainer-ads@paid-ads
 ```
 
-`google-ads`, `meta-ads`, and `keyword-planner` need API credentials. `creative` needs none. `reporting` needs no credentials of its own but calls the two ad plugins, plus a local `config/budget.md`. See **[SETUP.md](./SETUP.md)** for credentials, `uv`, and the OAuth flow.
+`google-ads`, `meta-ads`, and `keyword-planner` need API credentials. `creative` needs none. `reporting` needs no credentials of its own but calls the two ad plugins, plus a local `config/budget.md`. `explainer-ads` needs the Higgsfield and ElevenLabs MCP connections and `ffmpeg`. See **[SETUP.md](./SETUP.md)** for credentials, `uv`, and the OAuth flow.
 
 ## Plugins
 
@@ -36,12 +37,13 @@ Command: `/mine-search-terms`
 
 ### `meta-ads`
 
-MCP server wrapping Meta's official `meta ads` CLI. Local tokens, no third-party auth proxy. Reads campaigns, ad sets, ads, creatives, and insights; writes campaign, ad set, and ad changes.
+MCP server wrapping Meta's official `meta ads` CLI, plus direct Marketing API calls for what the CLI can't do: full ad-set targeting (radius, cities, zips, interests, custom audiences, placements), carousel and DCO creatives, and asset uploads. Local tokens, no third-party auth proxy. Reads campaigns, ad sets, ads, creatives, and insights; writes campaign, ad set, and ad changes.
 
 The creative fetch tools are the useful part: `ad_image_get` returns full-resolution images, and `ad_video_get` returns a timestamped transcript of the spoken script (plus optional keyframes) so video ads can be analyzed on what they actually say rather than on a thumbnail.
 
 | Skill | What it does |
 |---|---|
+| `meta-campaign-build` | Builds a whole campaign from a folder of assets plus a `campaign.xlsx` brief (or a Google Sheets CSV export). Dry run first, everything created PAUSED |
 | `meta-account-audit` | Five-step structural audit of an account, run in a fixed sequence before changing settings |
 | `meta-creative-analysis` | Cohort-level performance attribution — why some creatives outperform, ending in next-test theses |
 
@@ -76,6 +78,20 @@ Skills only. Cross-channel pacing and performance review, orchestrating the two 
 |---|---|
 | `budget-pacing-manager` | Is spend on schedule, and should budget move? Day-aware tolerance band, trailing-14-day reallocation logic, Google impression-share and Meta frequency supply diagnostics, budget-conserving recommendations |
 | `advertising-performance-manager` | Is that spend producing leads at the right cost? 3-month day-matched baselines, 🔴/🟢/🟡/🆕 buckets, and a symptom-to-cause table separating auction pressure from creative fatigue from broken tracking |
+
+### `explainer-ads`
+
+Skills only. Turns a direct-response script into a finished, narrated, captioned vertical video ad. Narration is recorded before animation so scenes are timed to the real audio. No spokespeople, AI avatars, or UGC.
+
+| Skill | What it does |
+|---|---|
+| `explainer-ad-director` | Owns the pipeline and the run state. Start here |
+| `beat-planner` | Script → scene list with beats, durations, and word budgets |
+| `scene-renderer` | Style-locked, frame-chained keyframes, then animation (Higgsfield) |
+| `narration` | ElevenLabs voiceover, one locked voice per brand |
+| `ad-assembly` | ffmpeg trim, concat, mux, caption burn, delivery check |
+
+Command: `/explainer-ad`
 
 ## How it fits together
 
@@ -115,10 +131,11 @@ paid-ads-skills/
 │   └── marketplace.json      Marketplace manifest
 ├── SETUP.md                  Credentials, uv, OAuth, smoke tests
 ├── google-ads/               MCP server (Python) + 4 skills
-├── meta-ads/                 MCP server (Python) + 2 skills
+├── meta-ads/                 MCP server (Python) + 3 skills
 ├── keyword-planner/          MCP server (Python) + 1 skill
 ├── creative/                 6 skills, no MCP server
-└── reporting/                2 skills, no MCP server
+├── reporting/                2 skills, no MCP server
+└── explainer-ads/            5 skills, no MCP server
 ```
 
 Each plugin has a `CLAUDE.md` defining its operating posture and guardrails, and a `README.md` covering its own setup.

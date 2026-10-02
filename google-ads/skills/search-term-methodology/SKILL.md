@@ -132,18 +132,22 @@ Stage 2 — **Promote to own ad group**: Trigger promotion when:
 
 ## Output Format (for negation/keyword work)
 
-For every evaluated term, produce:
+Governed by **Output Discipline** in the plugin's `CLAUDE.md`. Read it before writing the summary.
 
-| Search Term | Clicks | Impr. | Spend | CPC | Decision | Reasoning |
-|-------------|--------|-------|-------|-----|----------|-----------|
+**Row-level data goes to the CSV, not to chat.** Every evaluated term gets a row — search term, clicks, impressions, spend, CPC, decision, reasoning. That file is the record. Chat gets counts and the decisions that need the analyst.
 
-Always include clicks, impressions, and spend. Never show spend alone.
+Chat summary, in this order:
 
-Present in two sections:
-1. **Negate candidates** — grouped by campaign, sorted by spend descending
-2. **Keyword opportunities** — listed with suggested ad group destination and match type
+1. **Headline** — counts and recovered spend. "47 negates across 4 campaigns, $412/30d. 3 held for you."
+2. **Pushed / ready to push** — one line per campaign: campaign name and count. No term lists unless asked.
+3. **Held or skipped** — one line each, with the fact that would make the analyst overrule you and the stake. This is the only section that earns two clauses per item.
+4. **Test candidates** — one line each: the term, the two readings, the question. Never negate unilaterally.
+5. **Keyword opportunities** — one line each: term, destination ad group, match type, and the number that justifies it (conversion, impressions, or distinct intent).
+6. **Keyword health note** — only if 1-impression cluster analysis was triggered, and only if it changes an action.
 
-Followed by any **keyword health observations** if 1-impression cluster analysis was triggered.
+For phrase match negates, name the **signal word** being negated, not the full term.
+
+A table earns its place when the analyst is comparing magnitude across four or more rows. For three items, use lines.
 
 ---
 
@@ -211,14 +215,19 @@ Don't over-analyze the distribution. If five of the top ten terms in both period
 
 ## Output Format for Pulse Check
 
-When delivering a performance pulse check, structure the answer as:
+Four lines, then stop. The analyst wants the verdict, not the ladder.
 
-1. **Variables crossed off table** — CTR / CVR / impressions / theme stability across baseline and recent period
-2. **Search-term theme comparison** — top terms from both periods, side-by-side or summarized
-3. **Verdict** — market timing, real problem, or mixed signal (with which variable to investigate)
-4. **Recommended action** — hold steady, investigate X, or escalate to client
+```
+[Campaign] — market timing, not a problem.
+CTR 3.1% → 3.2% · CVR 4.4% → 4.1% · terms still on-theme (7 of top 10 match)
+Conversions 22 → 6 tracks the season, not the campaign.
+Hold. Revisit when registration opens in August.
+```
 
-**Never lead with conversion data alone.** Lead with whether the campaign is still attracting the right buyer.
+- **Lead with the verdict**, never with conversion data.
+- Cross-off metrics go on one line, not in a table — the analyst only needs to see that they held.
+- The theme comparison collapses to a count ("7 of top 10 share intent"). Do not print both term lists unless a variable broke.
+- If a variable *did* break, that's case 3 under "What earns extra words" — name which one, show both periods, and say what to investigate.
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "google-ads",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Google Ads MCP server plus skills for search-term mining, negative keywords, campaign builds, and naming conventions. Reads and writes a live account via the Google Ads API.",
   "author": {
     "name": "Trent Walker"

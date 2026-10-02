@@ -79,15 +79,23 @@ Theme prioritization is always bottom-of-funnel first, working upward:
 
 ### Step 5: Deliver Output
 
-Present as a structured keyword list per theme:
-- Theme name (the anchor concept)
-- ~10 keywords with search volume and competition data
-- Recommended match type: start with exact match for all keywords
-- Top 5 by volume flagged for ad copy headline use
-- Any keywords flagged for separate campaigns (different funnel stage)
-- Any irrelevant terms discovered (seed the negative keyword list)
+One line per theme. See the plugin `CLAUDE.md` → "Output Discipline".
 
-**If the brand targets multiple geos, organize the deliverable as campaign-per-city with themes as ad groups inside (see next section for why). Do NOT deliver a flat theme list that relies on city-modified keywords inside a single campaign — that structure can't be operated properly in Google Ads.**
+```
+N themes, N keywords, all exact.
+
+  [theme] — [volume]/mo [geo], [competition], $[low]–$[high]. [H1–H5 anchor | own ad group]
+  [theme] — [volume]/mo, [competition]. [note only if it changes the build]
+
+Skipped: [theme] — [the reason in one clause]
+Negatives seeded: N terms → [file or list]
+```
+
+Per theme, the reader needs: volume, competition, bid range, whether it anchors H1–H5, and whether it belongs in a different campaign (different funnel stage). Nothing else.
+
+Full keyword lists with per-keyword metrics go to a file, not into chat.
+
+**If the brand targets multiple geos, organize the deliverable as campaign-per-city with themes as ad groups inside (see next section for why). Do NOT deliver a flat theme list that relies on city-modified keywords inside a single campaign — that structure can't be operated properly in Google Ads.** State that as one line, not a lecture — the reasoning below is there if they ask.
 
 If the user wants to proceed to building, hand off to the `google-ads-campaign-build` skill.
 

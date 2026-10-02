@@ -15,9 +15,11 @@ meta-ads/
 ├── mcp_meta_ads/       The MCP server itself
 │   ├── __main__.py               Entrypoint (`python -m mcp_meta_ads`)
 │   ├── server.py                 FastMCP server + tool definitions
-│   └── cli.py                    Thin subprocess wrapper around the `meta` CLI
-├── commands/                     Slash commands (empty in v0.1.0)
-├── skills/                       Account audit + creative analysis skills
+│   ├── cli.py                    Thin subprocess wrapper around the `meta` CLI
+│   ├── graph.py                  Direct Marketing API client for what the CLI can't do
+│   └── build.py                  Spreadsheet → campaign builder (plan / execute)
+├── tests/test_build.py           Builder tests with the Graph API mocked (no network)
+├── skills/                       meta-campaign-build, meta-account-audit, meta-creative-analysis
 ├── CLAUDE.md                     Agent-facing guidance loaded when the plugin is active
 └── README.md                     (you are here)
 ```
@@ -69,10 +71,21 @@ meta-ads/
 Typed MCP tools cover:
 
 - **Ad accounts** — `list`, `get`, `current`
-- **Campaigns** — `list`, `get`, `create`, `update`, `delete`
-- **Ad sets** — `list`, `get`, `create`, `update`
-- **Ads** — `list`, `get`, `create`, `update`
-- **Creatives** — `list`, `get`, `create` (single-image)
+- **Campaigns** — `list`, `get`, `create` (special ad categories, bid strategy, CBO), `update`, `delete`
+- **Ad sets** — `list`, `get`, `create`, `create_full` (radius / cities / zips / regions,
+  age & gender, interests, custom & lookalike audiences, placements, Advantage+
+  audience, pixel + conversion event, schedules), `update`, `delete`
+- **Ads** — `list`, `get`, `create` (with pixel tracking), `update`, `delete`
+- **Creatives** — `list`, `get`, `create` (image or video), `create_full`
+  (image / video / carousel / DCO with UTM `url_tags`), `delete`
+- **Assets & lookups** — `image_upload`, `video_upload` (chunked, waits for
+  processing), `page_list`, `pixel_list`, `custom_audience_list`, `geo_search`,
+  `interest_search`, `targeting_from_sheet_row`
+- **Campaign builder** — `campaign_sheet_template` writes a `campaign.xlsx`
+  brief; `campaign_build` turns that workbook plus the assets beside it into a
+  complete PAUSED campaign. `dry_run=True` validates and returns the exact
+  payloads without touching the account; `dry_run=False` builds, resumably.
+  Process is in `skills/meta-campaign-build/SKILL.md`.
 - **Insights** — `get` with date presets, custom ranges, fields, breakdowns
 - **Creative inspection** — `ad_image_get` / `creative_image_get` return the
   creative as an inline image so Claude can read on-image copy and classify

@@ -4,18 +4,26 @@ Add new tools by writing a function decorated with `@mcp.tool()`. The function
 signature becomes the JSON schema; the body should `return run_meta([...])`.
 See the existing tools for the pattern.
 
-Coverage status (as of v0.1.0):
-  Campaigns          : list, get, create, update, delete          [DONE]
-  Ad Sets            : list, get, create, update, delete          [partial]
-  Ads                : list, get, create, update, delete          [partial]
-  Creatives          : list, get, create, update, delete          [partial]
-  Insights           : get (with date ranges + breakdowns)         [DONE]
-  Catalogs           : list, get, create, update, delete          [TODO]
-  Product Items      : list, get, create, update, delete          [TODO]
-  Product Sets       : list, get, create, update, delete          [TODO]
-  Datasets (Pixels)  : list, create, get, connect, disconnect     [TODO]
-  Ad Accounts        : list, get, current                          [DONE]
-  Pages              : list, get                                   [TODO]
+Two backends:
+  * `run_meta(...)`  — Meta's official `meta ads` CLI. Used for everything it
+    does well: list/get/update/delete, insights, single-asset creatives.
+  * `graph.*`        — direct Marketing API calls (same ACCESS_TOKEN) for what
+    the CLI cannot do: full ad-set targeting (radius / cities / zips /
+    interests / custom audiences / placements / Advantage+ audience),
+    carousel + DCO creatives, asset uploads, and the spreadsheet-driven
+    campaign builder in `build.py`.
+
+Coverage status (as of v0.6.0):
+  Campaigns          : list, get, create (Graph), update, delete          [DONE]
+  Ad Sets            : list, get, create (CLI + Graph full), update, del  [DONE]
+  Ads                : list, get, create, update, delete                  [DONE]
+  Creatives          : list, get, create (image/video/carousel/dco), del  [DONE]
+  Assets             : image_upload, video_upload                         [DONE]
+  Lookups            : page_list, pixel_list, custom_audience_list,
+                       geo_search, interest_search                        [DONE]
+  Campaign builder   : campaign_sheet_template, campaign_build (dry-run)  [DONE]
+  Insights           : get (with date ranges + breakdowns)                [DONE]
+  Catalogs / Product Items / Product Sets / Datasets                      [meta_raw]
 """
 
 from __future__ import annotations
@@ -24,6 +32,8 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
+from . import build as _build
+from . import graph as _graph
 from .cli import MetaCliError, run_meta
 
 mcp = FastMCP("meta-ads")
@@ -123,29 +133,43 @@ def campaign_create(
     lifetime_budget: int | None = None,
     special_ad_categories: list[str] | None = None,
     bid_strategy: str | None = None,
+    ad_account_id: str | None = None,
 ) -> Any:
     """Create a new campaign. Resource is created in PAUSED status.
+
+    Goes through the Graph API rather than the CLI: the CLI's `campaign create`
+    has no flags for special ad categories or bid strategy, and the API
+    requires `special_ad_categories` on every create (empty list = none).
 
     Args:
         name: Campaign name. Follow your naming convention (see the naming-conventions skill).
         objective: One of OUTCOME_AWARENESS, OUTCOME_TRAFFIC, OUTCOME_ENGAGEMENT,
             OUTCOME_LEADS, OUTCOME_SALES, OUTCOME_APP_PROMOTION.
         daily_budget: Daily budget in account currency MINOR units (cents for USD).
+            Setting a campaign budget turns on CBO (Advantage+ campaign budget).
         lifetime_budget: Lifetime budget in MINOR units. Mutually exclusive with daily.
         special_ad_categories: e.g. ["HOUSING"], ["EMPLOYMENT"], ["CREDIT"], ["ISSUES_ELECTIONS_POLITICS"].
         bid_strategy: LOWEST_COST_WITHOUT_CAP | LOWEST_COST_WITH_BID_CAP | COST_CAP | LOWEST_COST_WITH_MIN_ROAS.
+            Only meaningful with a campaign-level budget.
+        ad_account_id: act_XXXXXXXXX. Falls back to AD_ACCOUNT_ID env.
     """
-    argv = [
-        "campaign",
-        "create",
-        *_flag("--name", name),
-        *_flag("--objective", objective),
-        *_flag("--daily-budget", daily_budget),
-        *_flag("--lifetime-budget", lifetime_budget),
-        *_flag("--special-ad-categories", special_ad_categories),
-        *_flag("--bid-strategy", bid_strategy),
-    ]
-    return run_meta(argv)
+    if daily_budget and lifetime_budget:
+        raise ValueError("Pass daily_budget or lifetime_budget, not both.")
+    body: dict[str, Any] = {
+        "name": name,
+        "objective": objective.upper(),
+        "status": "PAUSED",
+        "special_ad_categories": [s.upper() for s in (special_ad_categories or [])],
+        "buying_type": "AUCTION",
+    }
+    if daily_budget:
+        body["daily_budget"] = daily_budget
+    if lifetime_budget:
+        body["lifetime_budget"] = lifetime_budget
+    if bid_strategy:
+        body["bid_strategy"] = bid_strategy.upper()
+    acct = _graph.normalize_account_id(ad_account_id)
+    return _graph.graph_post(f"{acct}/campaigns", body)
 
 
 @mcp.tool()
@@ -196,12 +220,8 @@ def adset_list(
     Note: the underlying CLI does not support a status filter. Filter
     client-side on `effective_status` if needed.
     """
-    argv = [
-        "adset",
-        "list",
-        *_flag("--campaign-id", campaign_id),
-        *_flag("--limit", limit),
-    ]
+    # CLI signature: `meta ads adset list [CAMPAIGN_ID] --limit N` (positional, no flag).
+    argv = ["adset", "list", *([campaign_id] if campaign_id else []), *_flag("--limit", limit)]
     return run_meta(argv, extra_env=_account_env(ad_account_id))
 
 
@@ -247,16 +267,174 @@ def adset_create(
 
 
 @mcp.tool()
-def adset_update(adset_id: str, status: str | None = None, daily_budget: int | None = None) -> Any:
-    """Update an ad set's status or budget. Extend as needed."""
+def adset_create_full(
+    campaign_id: str,
+    name: str,
+    optimization_goal: str,
+    targeting: dict[str, Any],
+    billing_event: str = "IMPRESSIONS",
+    daily_budget: int | None = None,
+    lifetime_budget: int | None = None,
+    bid_strategy: str | None = None,
+    bid_amount: int | None = None,
+    pixel_id: str | None = None,
+    conversion_event: str = "LEAD",
+    start_time: str | None = None,
+    end_time: str | None = None,
+    is_dynamic_creative: bool = False,
+    ad_account_id: str | None = None,
+) -> Any:
+    """Create an ad set with FULL targeting via the Graph API. Created PAUSED.
+
+    Use this instead of `adset_create` whenever targeting goes beyond a country
+    list. `targeting` is the Marketing API targeting spec. Build it with
+    `targeting_from_sheet_row` (recommended) or hand-write it. Common shape:
+
+        {
+          "geo_locations": {
+            "custom_locations": [{"address_string": "1200 Broadway, Nashville, TN", "radius": 25, "distance_unit": "mile"}],
+            "cities": [{"key": "2490299", "radius": 15, "distance_unit": "mile"}],
+            "zips": [{"key": "US:37203"}],
+            "countries": ["US"],
+            "location_types": ["home", "recent"]
+          },
+          "age_min": 25, "age_max": 65, "genders": [1],
+          "flexible_spec": [{"interests": [{"id": "6003...", "name": "Carpet cleaning"}]}],
+          "custom_audiences": [{"id": "1234"}], "excluded_custom_audiences": [{"id": "5678"}],
+          "targeting_automation": {"advantage_audience": 1},
+          "publisher_platforms": ["facebook", "instagram"], "facebook_positions": ["feed"], "instagram_positions": ["stream", "reels"]
+        }
+
+    Resolve city keys with `geo_search`, interest ids with `interest_search`,
+    audience ids with `custom_audience_list`.
+
+    Args:
+        campaign_id: Parent campaign.
+        name: Ad set name (follow your naming convention).
+        optimization_goal: OFFSITE_CONVERSIONS | LANDING_PAGE_VIEWS | LINK_CLICKS | REACH | THRUPLAY | ...
+        targeting: Targeting spec dict (see above).
+        billing_event: IMPRESSIONS (default) | LINK_CLICKS | THRUPLAY.
+        daily_budget / lifetime_budget: MINOR units. Leave both None when the campaign uses CBO.
+        bid_strategy: Only when the ad set carries the budget. LOWEST_COST_WITHOUT_CAP | COST_CAP | LOWEST_COST_WITH_BID_CAP.
+        bid_amount: MINOR units. Required for cost cap / bid cap.
+        pixel_id + conversion_event: Required when optimization_goal is OFFSITE_CONVERSIONS.
+        start_time / end_time: ISO 8601. end_time required with lifetime_budget.
+        is_dynamic_creative: True when the ad set will hold a DCO creative (one ad only).
+        ad_account_id: act_XXXXXXXXX. Falls back to AD_ACCOUNT_ID env.
+    """
+    body: dict[str, Any] = {
+        "campaign_id": campaign_id,
+        "name": name,
+        "optimization_goal": optimization_goal.upper(),
+        "billing_event": billing_event.upper(),
+        "targeting": targeting,
+        "status": "PAUSED",
+    }
+    if daily_budget:
+        body["daily_budget"] = daily_budget
+    if lifetime_budget:
+        body["lifetime_budget"] = lifetime_budget
+        if not end_time:
+            raise ValueError("lifetime_budget requires end_time.")
+    if bid_strategy:
+        body["bid_strategy"] = bid_strategy.upper()
+    if bid_amount:
+        body["bid_amount"] = bid_amount
+    if start_time:
+        body["start_time"] = start_time
+    if end_time:
+        body["end_time"] = end_time
+    if is_dynamic_creative:
+        body["is_dynamic_creative"] = True
+    if body["optimization_goal"] == "OFFSITE_CONVERSIONS":
+        if not pixel_id:
+            raise ValueError("OFFSITE_CONVERSIONS needs pixel_id.")
+        body["promoted_object"] = {"pixel_id": pixel_id, "custom_event_type": conversion_event.upper()}
+        body["destination_type"] = "WEBSITE"
+    elif body["optimization_goal"] in {"LANDING_PAGE_VIEWS", "LINK_CLICKS"}:
+        body["destination_type"] = "WEBSITE"
+    acct = _graph.normalize_account_id(ad_account_id)
+    return _graph.graph_post(f"{acct}/adsets", body)
+
+
+@mcp.tool()
+def targeting_from_sheet_row(
+    geo_type: str,
+    geo_value: str,
+    ad_account_id: str | None = None,
+    age_min: int = 18,
+    age_max: int = 65,
+    genders: str = "all",
+    interests: str = "",
+    custom_audiences: str = "",
+    excluded_audiences: str = "",
+    advantage_audience: str = "",
+    placements: str = "auto",
+    excluded_geo_type: str = "",
+    excluded_geo_value: str = "",
+    default_country: str = "US",
+) -> Any:
+    """Turn human targeting inputs into a Marketing API targeting spec.
+
+    Same column semantics as the AdSets sheet used by `campaign_build`, so
+    you can build one ad set ad hoc without a workbook. Resolves cities,
+    zips, interests, and audience names against Meta and returns both the
+    spec and a list of what each input resolved to (check those).
+
+    geo_type / geo_value formats:
+        countries  → "US;CA"
+        radius     → "1200 Broadway, Nashville, TN 37203 | 25mi; 36.16,-86.78 | 10mi"
+        cities     → "Nashville, TN | 15mi; Franklin, TN"      (radius optional, 10-50mi)
+        zips       → "37203; 37204"
+        regions    → "Tennessee; KY"
+    interests / custom_audiences / excluded_audiences: semicolon-separated names (or audience IDs).
+    advantage_audience: "Y" | "N" | "" (default: on unless interests/audiences are given).
+    placements: "auto" or "facebook:feed,story,reels; instagram:stream,reels".
+    """
+    acct = _graph.normalize_account_id(ad_account_id)
+    resolver = _build.Resolver(acct, default_country.upper())
+    row = {
+        "geo_type": geo_type, "geo_value": geo_value, "age_min": str(age_min), "age_max": str(age_max),
+        "genders": genders, "interests": interests, "custom_audiences": custom_audiences,
+        "excluded_audiences": excluded_audiences, "advantage_audience": advantage_audience,
+        "placements": placements, "excluded_geo_type": excluded_geo_type, "excluded_geo_value": excluded_geo_value,
+    }
+    try:
+        spec = _build.build_targeting(row, resolver)
+    except _build.BuildError as e:
+        return {"error": str(e), "resolutions": resolver.notes}
+    return {"targeting": spec, "resolutions": resolver.notes}
+
+
+@mcp.tool()
+def adset_update(
+    adset_id: str,
+    status: str | None = None,
+    daily_budget: int | None = None,
+    lifetime_budget: int | None = None,
+    bid_amount: int | None = None,
+    end_time: str | None = None,
+    name: str | None = None,
+) -> Any:
+    """Update an ad set. Pass status="ACTIVE" to launch a paused ad set."""
     argv = [
         "adset",
         "update",
         adset_id,
+        *_flag("--name", name),
         *_flag("--status", status),
         *_flag("--daily-budget", daily_budget),
+        *_flag("--lifetime-budget", lifetime_budget),
+        *_flag("--bid-amount", bid_amount),
+        *_flag("--end-time", end_time),
     ]
     return run_meta(argv)
+
+
+@mcp.tool()
+def adset_delete(adset_id: str) -> Any:
+    """Delete an ad set and its ads. Irreversible. Confirm with the user first."""
+    return run_meta(["adset", "delete", adset_id, "--force"])
 
 
 # ---------------------------------------------------------------------------
@@ -281,13 +459,14 @@ def ad_list(
     Note: the underlying CLI does not support a status filter. Filter
     client-side on `effective_status` if needed.
     """
-    argv = [
-        "ad",
-        "list",
-        *_flag("--adset-id", adset_id),
-        *_flag("--campaign-id", campaign_id),
-        *_flag("--limit", limit),
-    ]
+    # CLI signature: `meta ads ad list [ADSET_ID] --limit N`. There is no
+    # campaign filter on the CLI, so campaign_id goes through the Graph API.
+    if campaign_id and not adset_id:
+        return _graph.graph_get_all(
+            f"{campaign_id}/ads",
+            {"fields": "id,name,effective_status,adset_id,campaign_id,created_time", "limit": min(limit, 100)},
+        )[:limit]
+    argv = ["ad", "list", *([adset_id] if adset_id else []), *_flag("--limit", limit)]
     return run_meta(argv, extra_env=_account_env(ad_account_id))
 
 
@@ -298,17 +477,43 @@ def ad_get(ad_id: str) -> Any:
 
 
 @mcp.tool()
-def ad_create(adset_id: str, name: str, creative_id: str) -> Any:
-    """Attach an existing creative to an ad set as a new ad. Created in PAUSED status."""
-    argv = ["ad", "create", adset_id, *_flag("--name", name), *_flag("--creative-id", creative_id)]
+def ad_create(adset_id: str, name: str, creative_id: str, pixel_id: str | None = None) -> Any:
+    """Attach an existing creative to an ad set as a new ad. Created in PAUSED status.
+
+    Args:
+        pixel_id: Attach offsite-conversion tracking for this pixel (recommended
+            on every conversion campaign so Ads Manager reports results).
+    """
+    argv = [
+        "ad", "create", adset_id,
+        *_flag("--name", name),
+        *_flag("--creative-id", creative_id),
+        *_flag("--pixel-id", pixel_id),
+    ]
     return run_meta(argv)
 
 
 @mcp.tool()
-def ad_update(ad_id: str, status: str | None = None) -> Any:
-    """Update an ad — most often used to flip PAUSED to ACTIVE."""
-    argv = ["ad", "update", ad_id, *_flag("--status", status)]
+def ad_update(
+    ad_id: str,
+    status: str | None = None,
+    name: str | None = None,
+    creative_id: str | None = None,
+) -> Any:
+    """Update an ad — most often used to flip PAUSED to ACTIVE, or swap its creative."""
+    argv = [
+        "ad", "update", ad_id,
+        *_flag("--status", status),
+        *_flag("--name", name),
+        *_flag("--creative-id", creative_id),
+    ]
     return run_meta(argv)
+
+
+@mcp.tool()
+def ad_delete(ad_id: str) -> Any:
+    """Delete an ad. Irreversible. Confirm with the user first."""
+    return run_meta(["ad", "delete", ad_id, "--force"])
 
 
 # ---------------------------------------------------------------------------
@@ -344,9 +549,15 @@ def creative_create(
     title: str,
     link_url: str,
     image_path: str | None = None,
+    video_path: str | None = None,
+    description: str | None = None,
     call_to_action: str = "LEARN_MORE",
+    instagram_actor_id: str | None = None,
+    ad_account_id: str | None = None,
 ) -> Any:
-    """Create a single-image ad creative.
+    """Create a single-image or single-video ad creative via the CLI.
+
+    For carousel, DCO, UTM url_tags, or a display link, use `creative_create_full`.
 
     Args:
         name: Creative name.
@@ -354,9 +565,15 @@ def creative_create(
         body: Primary text (ad copy).
         title: Headline.
         link_url: Destination URL.
-        image_path: Local path to image file. Required for static creatives.
+        image_path: Local image file. Pass this OR video_path.
+        video_path: Local video file. The CLI uploads it and waits for processing.
+        description: Link description shown under the headline.
         call_to_action: CTA button (e.g. LEARN_MORE, SHOP_NOW, SIGN_UP, GET_QUOTE).
+        instagram_actor_id: Instagram account for IG placements.
+        ad_account_id: Override the default ad account.
     """
+    if bool(image_path) == bool(video_path):
+        raise ValueError("Pass exactly one of image_path or video_path.")
     argv = [
         "creative",
         "create",
@@ -366,9 +583,215 @@ def creative_create(
         *_flag("--title", title),
         *_flag("--link-url", link_url),
         *_flag("--image", image_path),
+        *_flag("--video", video_path),
+        *_flag("--description", description),
         *_flag("--call-to-action", call_to_action),
+        *_flag("--instagram-actor-id", instagram_actor_id),
     ]
-    return run_meta(argv)
+    return run_meta(argv, timeout=600, extra_env=_account_env(ad_account_id))
+
+
+@mcp.tool()
+def creative_create_full(
+    name: str,
+    page_id: str,
+    format: str,
+    asset_paths: list[str],
+    primary_text: str,
+    destination_url: str,
+    headline: str | None = None,
+    description: str | None = None,
+    cta: str = "LEARN_MORE",
+    url_tags: str | None = None,
+    display_link: str | None = None,
+    instagram_user_id: str | None = None,
+    ad_account_id: str | None = None,
+) -> Any:
+    """Create an image, video, carousel, or DCO creative via the Graph API. PAUSED.
+
+    Uploads the assets first (images → hash, videos → chunked upload + wait
+    for processing), then posts the creative. Same copy conventions as the
+    Ads sheet in `campaign_build`:
+
+      * carousel: `asset_paths` in card order (2-10). `headline`, `description`,
+        `destination_url` accept one value per card separated by `||`, or a
+        single value reused on every card.
+      * dco: up to 10 images OR videos; `primary_text`, `headline`,
+        `description`, `cta` accept up to 5 variants separated by `||`.
+        The target ad set must be created with is_dynamic_creative=True.
+      * url_tags: appended to every link, e.g.
+        "utm_source=facebook&utm_medium=ppc&utm_campaign={{campaign.name}}&utm_content={{ad.name}}"
+
+    Args:
+        format: image | video | carousel | dco
+        asset_paths: Local file paths.
+        ad_account_id: act_XXXXXXXXX. Falls back to AD_ACCOUNT_ID env.
+    """
+    from pathlib import Path
+
+    acct = _graph.normalize_account_id(ad_account_id)
+    fmt = format.lower()
+    paths = [Path(p).expanduser() for p in asset_paths]
+    for p in paths:
+        if not p.is_file():
+            raise FileNotFoundError(f"Asset not found: {p}")
+    images: dict[str, str] = {}
+    videos: dict[str, dict[str, Any]] = {}
+    for p in paths:
+        if p.suffix.lower() in _build._VIDEO_EXT:
+            videos[p.name] = _graph.upload_video(p, acct, title=p.name)
+        else:
+            images[p.name] = _graph.upload_image(p, acct)["hash"]
+    ad = {
+        "name": name, "format": fmt, "assets": [p.name for p in paths],
+        "row": {
+            "primary_text": primary_text, "headline": headline or "", "description": description or "",
+            "destination_url": destination_url, "cta": cta, "url_tags": url_tags or "",
+            "display_link": display_link or "",
+        },
+    }
+    campaign = {"_page_id": page_id, "_instagram_user_id": instagram_user_id, "_url_tags": None}
+    body = _build.creative_payload(ad, campaign, images, videos)
+    resp = _graph.graph_post(f"{acct}/adcreatives", body)
+    return {"creative": resp, "uploaded_images": images, "uploaded_videos": videos}
+
+
+@mcp.tool()
+def creative_delete(creative_id: str) -> Any:
+    """Delete a creative (fails if an active ad uses it). Confirm with the user first."""
+    return run_meta(["creative", "delete", creative_id, "--force"])
+
+
+# ---------------------------------------------------------------------------
+# Asset uploads + lookups (Graph API)
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def image_upload(path: str, ad_account_id: str | None = None) -> Any:
+    """Upload an image to the ad account's library. Returns {hash, url, name}.
+    Meta dedupes by content, so re-uploading is harmless."""
+    return _graph.upload_image(path, ad_account_id)
+
+
+@mcp.tool()
+def video_upload(path: str, ad_account_id: str | None = None, wait_ready: bool = True) -> Any:
+    """Chunked-upload a video to the ad account. Returns {id, status, thumbnail_url}.
+    With wait_ready (default) this blocks until Meta finishes processing, which
+    a creative needs before it can reference the video."""
+    return _graph.upload_video(path, ad_account_id, wait_ready=wait_ready)
+
+
+@mcp.tool()
+def page_list() -> Any:
+    """Facebook Pages the token can run ads as (id, name, category). Use the id as page_id."""
+    return _graph.list_pages()
+
+
+@mcp.tool()
+def pixel_list(ad_account_id: str | None = None) -> Any:
+    """Pixels / datasets on the ad account (id, name, last_fired_time)."""
+    return _graph.list_pixels(ad_account_id)
+
+
+@mcp.tool()
+def custom_audience_list(ad_account_id: str | None = None) -> Any:
+    """Custom + lookalike audiences on the ad account with approximate sizes and delivery status."""
+    return _graph.list_custom_audiences(ad_account_id)
+
+
+@mcp.tool()
+def geo_search(query: str, location_type: str = "city", country_code: str = "US") -> Any:
+    """Look up a targeting location key. location_type: city | zip | region | country.
+    Returns Meta's rows (key, name, region, country_code, supports_region/city...)."""
+    return _graph.search_geo(query, [location_type], country_code=country_code)
+
+
+@mcp.tool()
+def interest_search(query: str) -> Any:
+    """Detailed-targeting interest search. Returns id, name, audience size bounds, path."""
+    return _graph.search_interests(query)
+
+
+# ---------------------------------------------------------------------------
+# Spreadsheet-driven campaign builder
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def campaign_sheet_template(folder: str) -> Any:
+    """Write a blank `campaign.xlsx` (sheets: Campaign / AdSets / Ads) into `folder`.
+
+    Row 2 of AdSets and Ads is a help row (starts with #, ignored on build);
+    row 3 is an example to overwrite. Drop the image/video files the Ads sheet
+    references into the same folder (subfolders are fine), then run
+    `campaign_build` with dry_run=True.
+    """
+    p = _build.write_template(folder)
+    return {"template": str(p), "campaign_keys": _build.CAMPAIGN_KEYS,
+            "adset_columns": _build.ADSET_COLUMNS, "ad_columns": _build.AD_COLUMNS}
+
+
+@mcp.tool()
+def campaign_build(workbook_path: str, dry_run: bool = True) -> Any:
+    """Build a full Meta campaign (campaign → ad sets → creatives → ads), all PAUSED,
+    from a brief spreadsheet plus the assets beside it.
+
+    `workbook_path` accepts any of:
+      * `campaign.xlsx` with sheets Campaign / AdSets / Ads (the shipped template,
+        or a Google Sheet downloaded as Excel — all tabs come through);
+      * a folder containing one CSV per tab, named like Google Sheets exports
+        them: `<anything> - Campaign.csv`, `<anything> - AdSets.csv`,
+        `<anything> - Ads.csv`;
+      * any one of those CSVs (its folder is used).
+    Assets are found anywhere under the same folder.
+
+    ALWAYS run with dry_run=True first and show the operator the plan. It
+    validates every row, resolves cities / zips / interests / audiences against
+    Meta, and returns the exact payloads that would be sent — without creating
+    or uploading anything. Only after the operator approves the plan, call
+    again with dry_run=False.
+
+    Execution is resumable: created IDs are written to
+    `<workbook>.build-state.json` as they happen, so a mid-build failure
+    (bad asset, API hiccup) can be fixed in the sheet and rerun without
+    duplicating what already exists. Results land in
+    `<workbook>-build-results.csv` with every ID.
+
+    Nothing is ever set ACTIVE by this tool. The operator launches from Ads Manager.
+    """
+    try:
+        plan_ = _build.plan(workbook_path)
+    except _build.BuildError as e:
+        return {"ok": False, "error": str(e)}
+    except _graph.GraphApiError as e:
+        return {"ok": False, "error": f"Meta rejected a lookup while planning: {e}"}
+
+    if dry_run:
+        return {
+            "ok": True,
+            "dry_run": True,
+            "summary": plan_.summary(),
+            "campaign_payload": {k: v for k, v in plan_.campaign.items() if not k.startswith("_")},
+            "adset_payloads": [a["payload"] for a in plan_.adsets],
+            "ads": [{"name": a["name"], "adset": a["adset_name"], "format": a["format"], "assets": a["assets"]} for a in plan_.ads],
+            "warnings": plan_.warnings,
+            "resolutions": plan_.notes,
+        }
+
+    progress: list[str] = []
+    try:
+        result = _build.execute(plan_, progress.append)
+    except _graph.GraphApiError as e:
+        return {
+            "ok": False,
+            "error": str(e),
+            "progress": progress,
+            "hint": "Fix the cause (sheet value, asset, or permissions) and rerun with dry_run=False. "
+                    "Already-created objects are recorded in the state file and will not be duplicated.",
+            "state_file": str(_build._state_path(plan_)),
+        }
+    return {"ok": True, "dry_run": False, **result, "progress": progress, "warnings": plan_.warnings}
 
 
 # ---------------------------------------------------------------------------
@@ -423,30 +846,10 @@ def _meta_graph_api_get(path: str, params: dict[str, Any]) -> Any:
     caller is `_resolve_image_hashes_to_urls`, which needs `/act_X/adimages`
     to turn image hashes into full-resolution CDN URLs.
 
-    Don't expand the use of this freely — prefer adding CLI-backed tools.
+    Kept as a thin alias over `graph.graph_get` so existing callers (image
+    hash resolution, video metadata) share one client + API version.
     """
-    import json as _json
-    import os
-    import urllib.parse
-    import urllib.request
-
-    token = os.environ.get("ACCESS_TOKEN")
-    if not token:
-        raise RuntimeError(
-            "ACCESS_TOKEN env var not set; cannot call Graph API directly."
-        )
-    qs = dict(params)
-    qs["access_token"] = token
-    url = (
-        "https://graph.facebook.com/v23.0/"
-        f"{path.lstrip('/')}?{urllib.parse.urlencode(qs)}"
-    )
-    req = urllib.request.Request(
-        url, headers={"User-Agent": "meta-ads/0.1.3"}
-    )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        body = resp.read()
-    return _json.loads(body)
+    return _graph.graph_get(path, params, timeout=30)
 
 
 def _resolve_image_hashes_to_urls(

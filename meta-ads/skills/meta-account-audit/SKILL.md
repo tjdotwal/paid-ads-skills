@@ -158,7 +158,9 @@ These aren't performance problems — they're infrastructure problems, and they 
 
 ## Output — the audit brief
 
-Structured chat brief, internal voice. Use this exact structure:
+An audit is a hand-off deliverable, so it earns its length — case 4 under "What earns extra words" in the plugin `CLAUDE.md`. But every section still obeys one-line-per-finding.
+
+Structured chat brief, internal voice, this exact structure:
 
 ```
 # Meta Account Audit — [Client] ([mode], [date])
@@ -168,22 +170,24 @@ Structured chat brief, internal voice. Use this exact structure:
 (🟢 healthy / 🟡 warning / 🔴 red / ⚪ needs manual check — one row per check)
 
 ## The causal chain
-[3–6 sentences: what moved, and the FIRST layer that broke. This is the
+[3–6 sentences MAX: what moved, and the FIRST layer that broke. This is the
 "cause not symptom" verdict. If infrastructure findings undermine the data,
-lead with that.]
+lead with that. This is the only prose block in the brief.]
 
 ## Findings by step
-[Steps 1–5, each: the numbers, the benchmark verdict, what it means.
-Numbers in the open. Cite which metric proves each claim.]
+[Steps 1–5. One line per finding: the number, the verdict, what it means.
+Cite the metric that proves each claim. No paragraphs.]
 
 ## Manual checks required
-[Numbered list: exactly what to check, where (Events Manager, Klaviyo,
-Triple Whale...), and what answer would confirm/clear the flag.]
+[Numbered: what to check, where (Events Manager, Klaviyo, Triple Whale...),
+and what answer confirms or clears the flag. One line each.]
 
 ## Fix list (ordered by severity, not effort)
 [Infrastructure fixes first — they unblock trust in everything else.
-Each item: what to fix, which finding it comes from. Directional only.]
+One line each: what to fix, which finding it came from. Directional only.]
 ```
+
+The Scorecard is the whole audit for a reader in a hurry. If someone can read only that table and know what to do first, the brief works.
 
 **What this brief is not:** a strategy document. No new creative concepts, no budget reallocations, no restructure plans. End with handoffs:
 
@@ -213,4 +217,6 @@ If the user asks for a stakeholder-facing version, rebuild it as a a branded doc
 
 ## Voice
 
-Same register as the other briefs: operator-direct, numbers in the open, short sentences, no hedging padding. If data is thin, say so in five words. Push back when the data contradicts what you (or a stakeholder) believe — that's the entire value of an audit. Don't manufacture certainty, and don't soften a red flag because the account is a new engagement.
+Operator-direct, numbers in the open, short sentences, no hedging padding. If data is thin, say so in five words. Push back when the data contradicts what you (or a stakeholder) believe — that's the entire value of an audit. Don't manufacture certainty, and don't soften a red flag because the account is a new engagement.
+
+Length is governed by "Output Discipline" in the plugin `CLAUDE.md`. The audit is long because it has an audience beyond the operator — that is not licence for paragraphs under each finding.

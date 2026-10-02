@@ -178,13 +178,34 @@ This separation matters. If the analysis skill duplicates the strategist's work,
 
 ## Step 7 — Output the brief
 
-See `references/output-template.md` for the full markdown template. The required sections in order are:
+Two outputs, and they are not the same length.
+
+**The chat read (default).** Under 25 lines. See the plugin `CLAUDE.md` → "Output Discipline".
+
+```
+[Account] creative — [window] · $X spend · N conv · CPA $Y
+
+KILL   [ad] — [the one metric that condemns it]
+KILL   [ad] — [metric]
+SCALE  [ad] — [metric]
+ITERATE [ad] — [metric]
+
+Winning theme: [one sentence] — [the evidence, in a clause]
+
+Next: [2–3 directional theses, one line each] → ad-creative-strategist
+```
+
+**The full brief (on request, or when it's going to someone else).** `references/output-template.md` carries the template. Sections in order:
 
 1. **Account summary** — window, spend, conversions, CPA, active/paused counts, key flags
-2. **Ad-level comparison table** — all active ads with metrics + format + composite rank + verdict (KILL / SCALE / ITERATE)
-3. **Deep-dive on each ad** (or top 3 + bottom 1 if N > 10) — Creative format block (format / creative copy / visual style) + Ad copy framework block (headline / body / description, each verbatim) + Trend table + 2-sentence why-it-works synthesis
-4. **Winning messaging theme** — one-sentence + evidence
+2. **Ad-level comparison table** — all active ads: metrics + format + composite rank + verdict
+3. **Deep-dive per ad** (top 3 + bottom 1 if N > 10) — creative format block, ad copy framework block (verbatim), trend table, 2-sentence synthesis
+4. **Winning messaging theme** — one sentence + evidence
 5. **Recommendations** — 2–3 directional theses + handoff line
+
+Build the full brief when the operator asks for it, when it's a stakeholder-facing or hand-off deliverable, or when the read contradicts what a stakeholder believes and they need to see the working. Otherwise the chat read is the deliverable.
+
+**Do not narrate the composite math in chat.** Show the four ranks in the table so it's auditable; don't explain how you averaged them.
 
 ## Hard rules
 
@@ -217,14 +238,13 @@ These don't bend.
 
 This brief is for a junior team member to grab and act on. Write so they don't need to interpret you.
 
-- Short sentences. No filler.
-- Reference specific ads by shorthand when you're recommending something (e.g., "test a variant of Peace-of-Mind-10 that swaps in ad2a's headline").
-- Numbers in the open.
+- Short sentences. No filler. Numbers in the open.
+- Reference specific ads by shorthand when recommending something ("test a variant of Peace-of-Mind-10 that swaps in ad2a's headline").
 - If data is thin, say so in five words, not a paragraph.
-- Plain English, not buzzwords. No "register," no "framing," no "lean into."
+- Plain English. No "register," no "framing," no "lean into."
 - Push back when the data contradicts intuition.
-- Don't write to win awards. Write to be acted on.
+- Don't narrate your process, don't pre-empt objections nobody raised, and don't explain why a decision is a decision. See "Output Discipline" in the plugin `CLAUDE.md` for the full cut list.
 
-**The reader test:** A junior copywriter should read the recommendations section and know exactly what to build next, with no follow-up questions. If a sentence in your draft would make them ask "what do you mean?" — rewrite it.
+**The reader test:** a junior copywriter reads the recommendations and knows exactly what to build next, with no follow-up questions. If a sentence would make them ask "what do you mean?" — rewrite it.
 
 The brief is a working document, not a polished deliverable. Don't manufacture certainty.

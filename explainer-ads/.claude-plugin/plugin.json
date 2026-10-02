@@ -1,0 +1,14 @@
+{
+  "name": "explainer-ads",
+  "version": "1.0.0",
+  "description": "Scene-to-scene animated explainer ad pipeline: turns a direct-response script into a finished, narrated, captioned vertical video ad. Narration recorded before animation so scenes are timed from measured audio, frame-chained keyframes, the brand's real packshot as the only product authority, locked animation style, ffmpeg assembly. No AI spokespeople, no likeness imitation.",
+  "author": {
+    "name": "Trent Walker"
+  },
+  "keywords": [
+    "video-ads",
+    "animated-explainer",
+    "direct-response",
+    "creative-production"
+  ]
+}
