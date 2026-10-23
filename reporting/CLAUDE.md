@@ -78,6 +78,10 @@ Row-level data goes to the CSV or file, always. Chat gets counts and decisions. 
 - **No closing question** unless a real decision is pending. "Let me know if you'd like…" is noise.
 - **Tables for data, lines for decisions.** Don't build a table for a three-item list.
 
+### Sentence rules
+
+Load `google-ads:ste-output` before writing any output. It applies ASD-STE100 Simplified Technical English at about 80% strength: one action per sentence, actions start with the verb, 20-word limit on actions, one term per concept (conversions, CPA, spend, pause), and no fact dropped to make a sentence shorter. This section decides what goes in the output; that skill decides how each sentence reads.
+
 ## Guardrails
 
 - **Never mutate without explicit confirmation.** Both skills propose; the user approves. Read back every change and verify.

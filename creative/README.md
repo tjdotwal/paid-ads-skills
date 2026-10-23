@@ -12,7 +12,7 @@ creative/
 ├── skills/
 │   ├── competitor-research/SKILL.md         Deep competitor + market research → structured brief
 │   ├── scholarly-mechanism-research/SKILL.md  Source-verified scientific proof for ad claims
-│   ├── ad-creative-strategist/SKILL.md      Creative concepts + design briefs (52 formats)
+│   ├── ad-creative-strategist/SKILL.md      Creative concepts + design briefs (53 formats)
 │   └── direct-response-copywriter/SKILL.md  Turns the brief into high-converting DR copy
 ├── CLAUDE.md                           Agent-facing guidance loaded when the plugin is active
 └── README.md                           (you are here)
@@ -22,7 +22,7 @@ creative/
 
 - **competitor-research** — Turns a brand URL + target audience + named competitors into a structured, evidence-backed research brief (market landscape, ranked pain points with verbatim quotes, competitor vulnerabilities + pricing table, switching objections, desired benefits, campaign angles + big idea). This is the FIRST step before writing any copy for a new brand or campaign angle.
 - **scholarly-mechanism-research** — Runs deep, source-verified scientific research (Google Scholar, PubMed, journals) on a brand's problem and mechanism so ad claims can cite real peer-reviewed evidence. The *proof* layer that pairs with `competitor-research` (customer voice) and `ad-creative-strategist` (formats) — e.g. for medical-paper / research-screenshot creatives.
-- **ad-creative-strategist** — Generates static/slideshow/short-form video ad concepts and design-team-ready creative briefs across 52 formats; also reverse-engineers existing ads. Handles *visual format strategy*; hands copy decisions to `direct-response-copywriter` and can pull the canonical taxonomy from `meta-ads:creative-format-library`.
+- **ad-creative-strategist** — Generates static/slideshow/short-form video ad concepts and design-team-ready creative briefs across 53 formats; also reverse-engineers existing ads. Handles *visual format strategy*; hands copy decisions to `direct-response-copywriter` and can pull the canonical taxonomy from `meta-ads:creative-format-library`.
 - **direct-response-copywriter** — Writes high-converting DR copy (ads, headlines, image/body copy, VSL scripts, landing pages, emails). Runs AFTER `competitor-research` and pulls its diagnostic — customer pains, mechanism, big idea, verbatim quote ammunition — straight from that brief when one exists.
 
 The skills compose as a pipeline: **research → creative strategy → copy.** `competitor-research` (customer voice) and `scholarly-mechanism-research` (scientific proof) produce the evidence; `ad-creative-strategist` chooses the formats and concepts; `direct-response-copywriter` writes the words. Verbatim customer quotes and cited evidence flow through all of them.

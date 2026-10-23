@@ -1,6 +1,6 @@
 {
   "name": "reporting",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Cross-channel budget pacing and performance review across Google Ads and Meta. Day-aware pacing tolerance, 3-month day-matched baselines, bucket thresholds, and conversion-volume reallocation logic. Skills-only; pulls live metrics through the google-ads and meta-ads plugins.",
   "author": {
     "name": "Trent Walker"

@@ -1,4 +1,4 @@
-# Format detail — templates 43–52
+# Format detail — templates 43–53
 
 Full specs for the formats that carry more than a line of methodology. Templates 1–42 are self-explanatory from the one-line descriptors in `SKILL.md`.
 
@@ -6,18 +6,43 @@ Each entry covers what the format is, its structure, and the rules that make it 
 
 ---
 
-## 43. Problem Mechanism / Ugly Ad
+## 43. Problem Mechanism / Unaware Ad
 
 **Section:** E · **Ratio:** 4:5 · **Type:** Static, Image & Video
 
-Raw, deliberately unpolished creative that explains the mechanism of a problem in detail. Reads like a Notes-app screenshot or a stripped-down document — the aesthetic rejection is the point, because it signals "information, not advertising."
+An ad that leads with the problem mechanism, not the product. It is built for an unaware audience: people who have the symptoms but don't know the cause. The job is to make them aware of the problem, show them it's bigger than they think, and make it something they won't ignore.
 
-Still visibly an ad: it has a headline and a solution block. That's what separates it from #51 (Native), which has neither.
+**Creative strategy (static).** Show the problem mechanism physically or as a metaphor. The image should make the viewer feel the problem before they read a word. Gross, uncomfortable, or confronting is fine. No product in this frame.
+
+- Image direction examples: saran wrap over skin for pore-blocking, a wilting plant for dehydration, a cracked surface for dryness.
+
+**Headline starters.** The families that recur:
+- Hidden cause: "The real reason [symptom] keeps happening has nothing to do with [common belief]."
+- Mechanism reframe: "Most [people like you] don't have a [symptom] problem. They have a [mechanism] problem."
+- Hidden enemy / insider: "What [trusted institution] never tells you about [everyday thing]."
+- Delayed consequence: "What [common habit] is doing to your [system] right now."
+- Unanswerable test: "Can you [simple test]? Most [group] can't."
+- Story open on a social reversal, product nowhere in sight.
+
+**Video skeleton: The Missing Input** (10 beats)
+
+1. **Hook.** A fun fact or compliment about the hero (usually the viewer's body). "Break a bone, it heals."
+2. **Twist.** The one thing the hero can't do for itself. This sets up the problem. ("It can't make minerals." "Enamel can't grow back.")
+3. **Problem mechanism.** Drill into the problem to show expertise and make the viewer take it seriously.
+4. **Objection.** Say what they're thinking, agree you thought it too, then show what changed your mind. ("Surely food covers this?")
+5. **Villain.** The big enemy the brand and the viewer are both fighting. ("Food refining since the 1940s.")
+6. **Fairness.** Concede the obvious counter-argument to show you aren't blinded by bias.
+7. **Reframe.** Position the conceded option out of the way: it's fine, but it doesn't fix this case.
+8. **Product.** Introduce the product as the solution to the problem you just made them aware of.
+9. **Open loop (optional, often cut).** Tease what else it explains, no CTA.
+10. **CTA.** Risk reversal plus future-pacing. Paint the first step of the result ("after one day you'll notice"), not the end of the marathon.
+
+Worked examples of the skeleton: a men's mineral supplement ("your body can't make minerals") and Hismile Tooth Armor ("enamel is the one part that can't grow back").
 
 **Rules**
-- Reject design deliberately, don't just design badly. System fonts, flat backgrounds, no brand lockup.
-- The mechanism explanation carries the ad. If the copy doesn't teach something, ugliness alone won't save it.
-- One panel, one problem. A before/after pair is #46 instead.
+- No product in the static frame. The problem is the hero.
+- The mechanism has to be real. A confronting visual of an invented cause is a false claim.
+- One problem per ad. A before/after pair is #46 instead.
 
 ---
 
@@ -34,7 +59,7 @@ Polished but not slick. One hero element (product shot, color block, or branded 
 **Why it works:** it reads like a message, not an ad. Best for warm and retargeting audiences, high-resistance markets, and sale or inventory moments.
 
 **Distinct from**
-- **#43 Problem Mechanism / Ugly** — that format is unpolished and aesthetic-rejecting. This one is *designed*: branded fonts, intentional color, hero photo or color block.
+- **#43 Problem Mechanism / Unaware** — that format shows the problem with no product in frame. This one is *designed* around the product: branded fonts, intentional color, hero photo or color block, body copy as direct address.
 - **#31 Founder Story** — that requires a candid founder portrait on-image. This keeps the founder voice in the copy; no face required.
 
 ---
@@ -95,7 +120,7 @@ The power of the format and its danger are the same thing: a before/after body r
 
 **Best for** products with a real, physical, demonstrable mechanism — filtration, descaling, barrier repair, mechanical action, a substantiated cosmetic mechanism.
 
-**Classification:** tag **Primary 46**, secondaries **11** (before/after structure) and **30** (mechanism render). A deliberately raw single-panel problem visual is **#43** instead.
+**Classification:** tag **Primary 46**, secondaries **11** (before/after structure) and **30** (mechanism render). A problem visual with no product and no after state is **#43** instead.
 
 ---
 
@@ -319,7 +344,7 @@ Use these the way you'd use a rhetorical device in a headline. Pick one — stac
 - **#13 Social Media Comment Screenshot** — a screenshot *of* social proof, used as evidence. This is a post that *is* the content.
 - **#14 UGC-Style / Selfie Review** — UGC still performs a review to camera. Native makes no claim and often names no product.
 - **#38 Meme-Style** — also native to platform culture, but comedic and shareable-first. Native is sincere and curiosity-first.
-- **#43 Problem Mechanism / Ugly** — deliberately ugly but still visibly an ad: headline plus solution block. Native has neither.
+- **#43 Problem Mechanism / Unaware** — still visibly an ad: a headline over a problem visual. Native carries no ad signals at all.
 - **#44 Personal Letter / Confessional** — same first-person voice, but *designed*. Native is undesigned by rule.
 - **#36 Instagram Story / 9:16** — a placement spec, not a styling approach. 51a can run in that placement.
 
@@ -354,3 +379,88 @@ This matters most when a product's core claim is unusual enough that people have
 4. **Outcome:** Because the fix addresses the actual mechanism rather than just being "a better product," the brand can confidently double the industry-standard warranty.
 
 Note the shape: three beats of physics, one beat of claim. The warranty lands as a conclusion, not a boast.
+
+---
+
+## 53. Trigger Event / Drama Story Ad
+
+**Section:** F · **Ratio:** 1:1 & 9:16 (9:16 for animation, song, and yapper cuts; 1:1 or 4:5 for feed and native statics) · **Type:** AI Animation, Video Script, Image & Video
+
+A story ad built around one trigger event: the exact moment a customer's problem stopped being tolerable. "I have trouble sleeping" is a problem. "My mother-in-law told me I looked exhausted in front of my husband's entire family at Thanksgiving" is a trigger event.
+
+The ad cold-opens on that scene, walks through the spiral that followed, shows how they found the product and the one reason it worked, and ends back in the same scene with the problem solved. The product shows up late, sometimes around the 2-minute mark. It is a story structure first and a production format second. Source: Alex Cooper (October 2026), who calls it a trigger event ad; on X these are called AI drama ads.
+
+**Where it's winning (October 2026):** Quasi (skincare) runs 125 AI animation variations off seven trigger types, and its top three ads by impressions are all trigger event animations (the #1 runs 10 minutes). It has also worked for supplements and a toothbrush. Longer cuts win more, especially with older audiences.
+
+**Why it works**
+1. **Recognition does the targeting.** People who lived the scene stop scrolling. Everyone else keeps going.
+2. **Story earns belief before any claim.** By Act 4 the viewer wants the explanation.
+3. **One winner becomes dozens of ads.** Rotate the trigger, the character, or the format.
+
+**Reach for it when** the problem has a social or emotional cost, every competitor makes the same claims, you have reviews or comments to mine, and cold traffic is the target. **Skip it** for impulse buys and routine reorders, or when the only trigger you can find is generic ("I wanted to save money").
+
+**The five acts** (product never enters before Act 3)
+1. **Trigger event.** Cold open on the moment. Give it a place, a witness, and a detail.
+2. **Rock bottom.** More moments that make it worse, plus the failed fixes. The failed fixes tell the viewer it wasn't their fault.
+3. **Discovery.** The product is found inside the story: a friend's tip, a shelf, a drawer in a salon. Never a pitch, never a logo hero shot.
+4. **Mechanism.** One named reason it works when everything else didn't. Show it on screen.
+5. **Payoff.** Back to the Act 1 place with the same witness, transformed. Then a guarantee and the CTA.
+
+Holding rules: the Act 1 scene is both hook and payoff; one trigger event per ad; one mechanism in Act 4.
+
+**A strong trigger event has four parts:** place (Thanksgiving dinner, Target, a bathroom stall at a wedding), witness (the mother-in-law, the ex), detail (the word that stung, the number of people at the table), and turning point (the moment they decided they were done).
+
+| Weak (a condition) | Strong (a moment) |
+|---|---|
+| "I was tired all the time." | "My mother-in-law told me I looked exhausted in front of 14 people." |
+| "I was self-conscious about my teeth." | "Nobody told me to stop smiling in photos. I just did." |
+
+**Quasi's seven trigger types:** the run-in, the discovery of a betrayal, the overheard word, the milestone countdown, the intimacy retreat, the handover ritual, the exhaustion point. Keep the type fixed and rotate the place, witness, and character.
+
+**Finding trigger events.** Customers already describe them; never invent one. Look in long emotional reviews, ad comments, post-purchase surveys ("What made you finally decide to fix this?"), category Reddit threads, and for service clients, sales call notes and intake forms. Mining prompt for pasted reviews, comments, and survey answers:
+
+```txt
+You're mining voice-of-customer data for trigger events.
+
+A trigger event is the specific moment a customer's problem stopped being tolerable and they decided to fix it. It's a scene you could film: a place, a witness, and a line someone said or a detail they noticed.
+
+From the reviews, comments, and survey answers below:
+1. Pull every passage that describes a specific moment rather than a general complaint.
+2. Quote the customer's exact words.
+3. Rewrite each one as a one-line, first-person cold open.
+4. Name the place, the witness, and the detail. Mark any that are missing.
+5. Rate each one 1 to 5 on specificity. Drop anything under 3.
+6. Group them by trigger type (run-in, overheard comment, milestone, exhaustion point, discovery, other).
+
+Do not invent or embellish anything the customer didn't say.
+
+[PASTE VOC HERE]
+```
+
+**Production formats** (the storyline is the asset)
+
+| Format | How | Related |
+|---|---|---|
+| AI animation | Script in Claude, scenes in Higgsfield (Kling 3.0 or Seedance) | #47 |
+| Song ad | Five acts as lyrics, track in Suno, scenes in Higgsfield | #47 |
+| Yapper | A creator who looks like the customer tells it to camera | #42, #50 |
+| Native ad | Act 1 is the first line of primary text, cut before the payoff, with a raw image | #51c |
+| Slideshow | One act per frame, Act 1 as the hook frame | #41 |
+
+Ship whichever format is fastest to produce for the client, then port the winner. To scale, change one variable at a time: trigger place, character (age or situation), or format.
+
+**Substantiation gate**
+- Trigger events come from real customer words. If a review describes it, you can dramatize it.
+- Act 4's mechanism is a claim inside a story and needs the same proof as #30, #45, #46, and #52.
+- A dramatized narrator must not be presented as a real, named customer. Act 5 results must match what a typical customer gets.
+- Keep the brand out of Acts 1 and 2.
+- Narrate in first person. Meta's personal attributes policy blocks copy that asserts things about the viewer ("Embarrassed by your acne?"). "I started angling my face in photos" is the safe version.
+- Judge on CPA. On long cuts, check where viewers drop off. If they leave before Act 3, the trigger event isn't landing.
+
+**Distinct from**
+- **#5 PAS** — opens on a problem category and gets to the product fast. 53 opens on one filmed moment and holds the product until Act 3.
+- **#34 Emotional Trigger / FOMO** — uses "trigger" for a with/without static split. Here it means the moment the problem became intolerable.
+- **#44 Personal Letter** — a designed static in the brand's voice. 53 is a customer's story told in scenes.
+- **#47 AI Animation Style** — a visual style. They stack: a trigger event script in felt stop-motion is Primary 53, Secondary 47.
+- **#50 Long-Form VSL** — runs on two enemies and a third-party authority, always a selfie testimonial. 53 runs on one bookended scene in any format.
+- **#42 Outcome-First Yapper** — opens on the result. 53 opens on the worst moment.

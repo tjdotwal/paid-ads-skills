@@ -63,7 +63,7 @@ Skills only, no MCP server. The research and creative layer that runs before cop
 |---|---|
 | `competitor-research` | Market and competitor research → a structured brief: landscape, ranked pain points with verbatim customer quotes, competitor vulnerabilities, switching objections, campaign angles |
 | `scholarly-mechanism-research` | Source-verified research from Scholar/PubMed so claims cite real peer-reviewed evidence |
-| `creative-format-library` | 52-template format taxonomy across 7 sections, with full specs for the 10 formats that carry real methodology, plus the JSON prompt architecture for image generation |
+| `creative-format-library` | 53-template format taxonomy across 7 sections, with full specs for the 10 formats that carry real methodology, plus the JSON prompt architecture for image generation |
 | `ad-creative-strategist` | Ad concepts and design briefs against the format library; also reverse-engineers an existing ad from a screenshot |
 | `direct-response-copywriter` | DR copy — ads, headlines, image and body copy, VSL scripts, landing pages, emails. Pulls its diagnostic from the research brief when one exists |
 | `no-ai-slop` | Edits drafts against four principles (simplicity, brevity, clarity, humanity) and a pattern list, or audits a draft without rewriting |

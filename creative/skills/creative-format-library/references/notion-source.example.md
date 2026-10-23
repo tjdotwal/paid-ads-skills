@@ -42,4 +42,4 @@ When this file is absent, or the connector isn't available, the skill runs on `S
 
 ## Expected drift
 
-Notion is the live source, so it leads. The repo's 52-format table is a snapshot that gets updated deliberately. When the two disagree on *which formats exist*, Notion wins. When they disagree on *how a format works*, the repo's `format-detail.md` is the considered write-up and Notion's page may be thinner — the older formats (1–42) carry only a JSON prompt, with no prose spec at all.
+Notion is the live source, so it leads. The repo's 53-format table is a snapshot that gets updated deliberately. When the two disagree on *which formats exist*, Notion wins. When they disagree on *how a format works*, the repo's `format-detail.md` is the considered write-up and Notion's page may be thinner — the older formats (1–42) carry only a JSON prompt, with no prose spec at all.

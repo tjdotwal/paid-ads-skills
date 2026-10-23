@@ -8,7 +8,7 @@ description: >
   says "generate ad concepts", "what formats could work for this client", "give me creative ideas
   for this campaign", "reverse-engineer this ad", "write a creative brief", references any of
   the creative format types in the playbook, or mentions slideshow ads, story ads, video carousels,
-  sequenced frame ads, talking-head Reels, yapper ads, or ugly ads. Default output is a
+  sequenced frame ads, talking-head Reels, yapper ads, ugly or unaware ads, or trigger event / AI drama ads. Default output is a
   design-team-ready creative brief (copy on image + image suggestion, or talk track + b-roll for
   video formats). Only output JSON if the user explicitly asks for it.
 version: 1.0.0
@@ -17,7 +17,7 @@ version: 1.0.0
 # Ad Creative Strategist
 
 > **Canonical sources of truth**
-> - **Format taxonomy** — `creative-format-library`, in this same plugin. The inline Format Library below covers the same 52 templates with strategic notes layered on, so it's enough on its own for formats 1–42. For **43–52, read `../creative-format-library/references/format-detail.md`** — those entries are one-line summaries of specs running 40–90 lines each, and for the video formats (48, 49, 50) the beat sheet is the deliverable.
+> - **Format taxonomy** — `creative-format-library`, in this same plugin. The inline Format Library below covers the same 53 templates with strategic notes layered on, so it's enough on its own for formats 1–42. For **43–53, read `../creative-format-library/references/format-detail.md`** — those entries are one-line summaries of specs running 40–90 lines each, and for the video formats (48, 49, 50) the beat sheet is the deliverable.
 > - **JSON prompt architecture** — `creative-format-library/references/json-prompt-spec.md`: the key structure, the two-stage brand-DNA workflow, and a complete worked example.
 > - **For copy work** (image copy, headlines, body copy, VSL scripts, landing pages) — hand off to the `direct-response-copywriter` skill. This skill is for visual format strategy and design briefs; copy decisions go through the copywriter.
 
@@ -41,7 +41,7 @@ Triggered when the user is working on a brand advertising build and wants concep
 
 **Workflow:**
 1. Review the brand's brand, messaging, product, and campaign goals from the conversation context
-2. **Scan the formats** in the inline Format Library below. If any of 43–52 look like candidates, read `../creative-format-library/references/format-detail.md` for those before recommending them.
+2. **Scan the formats** in the inline Format Library below. If any of 43–53 look like candidates, read `../creative-format-library/references/format-detail.md` for those before recommending them.
 3. Recommend the 5–10 most strategically relevant formats for this brand and campaign
 4. For each recommended format, output a **design brief** in the standard format below
 5. Only offer JSON prompts if the user explicitly asks — do not default to it
@@ -146,7 +146,7 @@ Every JSON prompt uses exactly these keys. Do not rename, skip, or add keys unle
 
 ## Format Library
 
-`creative-format-library` is the source of truth for *which formats exist*. The list below covers the same 52 and adds what the taxonomy doesn't carry: which funnel stage each format suits and when to reach for it. Use it as your working list; go to the detail files when a format needs more than a line.
+`creative-format-library` is the source of truth for *which formats exist*. The list below covers the same 53 and adds what the taxonomy doesn't carry: which funnel stage each format suits and when to reach for it. Use it as your working list; go to the detail files when a format needs more than a line.
 
 ### Read the detail files directly
 
@@ -154,8 +154,8 @@ Every JSON prompt uses exactly these keys. Do not rename, skip, or add keys unle
 
 | Path | What's in it |
 |---|---|
-| `../creative-format-library/SKILL.md` | All 52 templates by section, classification tips, the mimicry and production-value distinctions |
-| `../creative-format-library/references/format-detail.md` | Full specs for 43–52 — structure, rules, substantiation gates, complete video script beat sheets, remix logic |
+| `../creative-format-library/SKILL.md` | All 53 templates by section, classification tips, the mimicry and production-value distinctions |
+| `../creative-format-library/references/format-detail.md` | Full specs for 43–53 — structure, rules, substantiation gates, complete video script beat sheets, remix logic |
 | `../creative-format-library/references/json-prompt-spec.md` | JSON prompt key architecture, two-stage brand-DNA workflow, worked example |
 | `../creative-format-library/references/notion-source.md` | **If present**, a live Notion upstream with a per-format JSON prompt template and reference screenshots |
 
@@ -174,13 +174,13 @@ On `local files only`, add one line naming what's missing: the per-format JSON p
 **When to read which:**
 
 - **Recommending or classifying formats 1–42** — the inline list below is sufficient. It carries strategic notes (funnel stage, when to reach for it) the taxonomy doesn't.
-- **Any of 43–52 in play** — read `format-detail.md` for that format before writing the brief. The inline entries for these are summaries of documents that run 40–90 lines each; for 48, 49, and 50 the beat sheet *is* the deliverable and you cannot reconstruct it from one line.
+- **Any of 43–53 in play** — read `format-detail.md` for that format before writing the brief. The inline entries for these are summaries of documents that run 40–90 lines each; for 48, 49, and 50 the beat sheet *is* the deliverable and you cannot reconstruct it from one line.
 - **Writing a JSON prompt** — if `notion-source.md` exists, fetch that format's page and use its template. Otherwise read `json-prompt-spec.md` for the key architecture and build one. Never improvise the key structure from memory.
-- **Substantiation-gated formats (30, 45, 46, 52)** — read the gate in `format-detail.md` before proposing them. These borrow credibility from research or anatomy, so a version that can't clear its gate isn't a creative shortcut, it's a false claim.
+- **Substantiation-gated formats (30, 45, 46, 52, 53)** — read the gate in `format-detail.md` before proposing them. These borrow credibility from research or anatomy, so a version that can't clear its gate isn't a creative shortcut, it's a false claim.
 
-The inline list below and the taxonomy cover the same 52 templates. If they ever disagree on which formats exist, `creative-format-library` wins — it's the source of truth and this list is a strategic-notes layer over it.
+The inline list below and the taxonomy cover the same 53 templates. If they ever disagree on which formats exist, `creative-format-library` wins — it's the source of truth and this list is a strategic-notes layer over it.
 
-### The 52 formats, with strategic notes
+### The 53 formats, with strategic notes
 
 Bold-marked entries have full specs in `../creative-format-library/references/format-detail.md`. Read those before writing a brief against them.
 
@@ -224,12 +224,13 @@ Bold-marked entries have full specs in `../creative-format-library/references/fo
 28. **Ingredient Spotlight** — Hero ingredient macro + product shot. One ingredient only. 1:1
 29. **Nutritional / Spec Breakdown** — Clean visual breakdown of specs. 1:1
 30. **The Science Behind** — Diagram/illustration of mechanism of action. Supplements, skincare, tech. 4:5
-43. **Problem Mechanism / Ugly Ad** — Raw, intentionally unpolished creative that explains the *why* of the problem in long-form detail. Looks like a doc, a notepad, a screenshot, or a stripped typographic layout — not a designed ad. Works because it reads like information, not marketing. Use for high-resistance audiences who reject polish. 4:5 or 9:16.
+43. **Problem Mechanism / Unaware Ad** — Leads with the problem mechanism, not the product, for a viewer who has the symptoms but doesn't know the cause. The static shows the problem literally or as a metaphor (saran wrap over skin, a wilting plant); gross or confronting is fine, and no product appears in the frame. The video version runs a 10-beat "missing input" skeleton: hook, twist, mechanism, objection, villain, fairness, reframe, product, optional open loop, CTA. 4:5. **Full spec in `format-detail.md`.**
 46. **Mechanism Proof / Before-After Body Render** — Illustrated or rendered before-and-after of the mechanism at work (e.g., inside the body, on a surface) to make an invisible process visible. Educational proof for health, skincare, supplement, and tech offers. Pairs with `scholarly-mechanism-research` for the underlying science. **Substantiation-gated** — the render may only show an outcome the product can prove it causes. 1:1
 47. **AI Animation Style Ads** — AI animation in a deliberately non-default material style: felt stop-motion, plush, puppet, vinyl toy, cardboard, diorama, glass. The Pixar/claymation look is saturated; a chosen material reads as craft instead. Pick one material and hold it for the whole spot — physical-material styles tolerate AI imperfection far better than photoreal humans do, which is most of why they work. 1:1 & 9:16
 48. **Problem Deep Dive Yapper Ad** — Faceless, prop-driven demo video. Roughly 80% teaching the root cause with real objects, 20% pitch, so the viewer feels taught rather than sold and the product lands as the conclusion of the lesson. Cheap to shoot and endlessly remixable across niches. Needs a teachable problem and something physical to demonstrate with. 9:16. **Full beat sheet in `format-detail.md`.**
 49. **Destroy The Common Belief Explainer** — Opens by naming and destroying a belief the viewer already holds, teaches the real mechanism, and introduces the product only as the "new mechanism" near the end. Thirteen beats, each removing one reason not to buy. For categories crowded with cheap look-alikes and misinformation, where a false belief is the thing blocking the sale. 9:16. **Full beat sheet in `format-detail.md`.**
 50. **Long-Form Full-Funnel VSL (Common Enemy)** — 2:30–3:30 UGC selfie testimonial that walks cold traffic through the entire awareness ladder in one first-person story, on a stacked two-enemy structure: a distrusted institution for emotional alliance, the cheap/fake version of the solution for logical exoneration. Product arrives at the 60–70% mark. Heavy artillery for cold traffic and higher-consideration offers where the buyer has already tried the cheap version and been burned. 9:16. **Full beat sheet in `format-detail.md`.**
+53. **Trigger Event / Drama Story Ad** — First-person story that cold-opens on the one filmable moment the problem became intolerable (a place, a witness, the line someone said), spirals through rock bottom, finds the product in Act 3 through a friend's tip, names one mechanism, and ends back in the Act 1 scene transformed. The storyline is the asset: run it as AI animation, a song ad, a yapper, a native caption, or a slideshow. Trigger events come from real customer reviews and comments, never invented. 1:1 & 9:16. **Full spec in `format-detail.md`.**
 51. **Native Ad (Organic-Mimic)** — Built to pass as an actual organic post, not "authentic-looking branded content." Two jobs, both required: no signal that it's an ad (no logo, no brand font, no overlay, no CTA in-frame), and a visual that provokes a question it refuses to answer, so the only way to find out is to tap. Four variants — 51a native reel, 51b raw static, 51c long-caption truncation, 51d advertorial. Buys clicks with curiosity, so judge on CPL/CPA and never CTR alone, and make sure the landing page pays the question off in the first screen. Per-variant ratios and the curiosity-device list in `format-detail.md`.
 52. **Science / Mechanism Explainer** — Teaches the causal *process* behind a claim in four beats (problem → mechanism → proof → outcome) so the reader reaches the conclusion themselves instead of being told it. Three beats of physics, one beat of claim; the benefit lands last and feels earned. Only works when there's a genuine explainable mechanism and the audience's default assumption about the problem is wrong or incomplete. Never stack two mechanisms — the format lives on one "aha." 1:1 & 9:16
 

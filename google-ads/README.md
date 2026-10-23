@@ -15,6 +15,7 @@ A FastMCP server in this plugin (`mcp_google_ads/`) that calls the Google Ads RE
 |-------|---------|
 | `naming-conventions` | Teaches Claude how to parse the campaign naming taxonomy so it understands what each campaign is selling, to whom, and at what funnel stage |
 | `search-term-methodology` | The relevance evaluation framework for deciding whether a search term should be negated, kept, or flagged for review |
+| `ste-output` | Sentence-level writing rules based on ASD-STE100 Simplified Technical English: one action per sentence, verb-first actions, one term per concept, no fact dropped for brevity. Loaded by every ad-ops plugin before writing output |
 | `mine-search-terms` | Execution skill — pulls search term data via GAQL, evaluates every term using the two skills above, produces a bulk-upload CSV, and optionally pushes negatives directly |
 
 ### Commands

@@ -20,7 +20,7 @@ This plugin holds the **research and creative** skills — the work that happens
 |---|---|
 | `competitor-research` | Deep competitor + market research → a structured brief (landscape, ranked pain points with verbatim quotes, competitor vulnerabilities + pricing table, switching objections, desired benefits, campaign angles + big idea). |
 | `scholarly-mechanism-research` | Source-verified scientific research (Scholar/PubMed/journals) on the brand's problem + mechanism, so ad claims cite real peer-reviewed evidence. The proof layer. |
-| `ad-creative-strategist` | Generate ad concepts + design-team-ready creative briefs (52 formats), or reverse-engineer an existing ad. Visual format strategy — hands copy to the copywriter. |
+| `ad-creative-strategist` | Generate ad concepts + design-team-ready creative briefs (53 formats), or reverse-engineer an existing ad. Visual format strategy — hands copy to the copywriter. |
 | `direct-response-copywriter` | Write/review DR copy (ads, headlines, image & body copy, VSL scripts, landing pages, emails). Pulls its diagnostic from the research brief when one exists. |
 | `no-ai-slop` | Edit any draft against the four principles (simplicity, brevity, clarity, humanity) and the words/patterns list, or audit a draft for slop without rewriting. |
 
